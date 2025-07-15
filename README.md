@@ -13,7 +13,7 @@ A Django-based web platform promoting sustainable fishing practices and connecti
 
 1. **Clone the repository**
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/LewisMagangi/Sustainable_Fishing.git
 cd sustainable_fishing_project
 ```
 
@@ -94,7 +94,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📞 Contact
 
-Project Link: [https://github.com/yourusername/sustainable_fishing_project](https://github.com/yourusername/sustainable_fishing_project)
+Project Link: [https://github.com/LewisMagangi/Sustainable_Fishing](https://github.com/LewisMagangi/Sustainable_Fishing)
 
 ---
 
