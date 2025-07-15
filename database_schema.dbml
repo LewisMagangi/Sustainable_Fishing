@@ -1,0 +1,84 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Sustainable Fishing Platform Database Schema
+// Updated: Removed notes from references to fix dbdiagram.io errors
+
+Table users {
+  id integer [primary key]
+  username varchar(50) [unique, not null]
+  email varchar(100) [unique, not null]
+  password varchar(255) [not null]
+  full_name varchar(100)
+  role varchar(20) [default: 'fisherman', note: 'fisherman, educator, admin']
+  profile_picture varchar(255)
+  bio text
+  location varchar(100)
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table catches {
+  id integer [primary key]
+  fisher_id integer [not null]
+  fish_type varchar(50) [not null]
+  weight decimal(8,2) [not null]
+  location varchar(100) [not null]
+  catch_date date [not null]
+  status varchar(20) [default: 'unsold', note: 'sold, unsold, donated']
+  price decimal(10,2)
+  notes text
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table timeline_posts {
+  id integer [primary key]
+  author_id integer [not null]
+  title varchar(200) [not null]
+  content text [not null]
+  post_type varchar(20) [default: 'general', note: 'general, catch_share, education, tip']
+  image varchar(255)
+  likes_count integer [default: 0]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table educational_content {
+  id integer [primary key]
+  author_id integer [not null]
+  title varchar(200) [not null]
+  content text [not null]
+  category varchar(50) [note: 'sustainability, techniques, regulations, conservation']
+  difficulty_level varchar(20) [default: 'beginner', note: 'beginner, intermediate, advanced']
+  is_published boolean [default: false]
+  featured boolean [default: false]
+  read_count integer [default: 0]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table post_likes {
+  id integer [primary key]
+  user_id integer [not null]
+  post_id integer [not null]
+  created_at timestamp [default: `now()`]
+  
+  indexes {
+    (user_id, post_id) [unique]
+  }
+}
+
+// Relationships - Notes removed to fix dbdiagram.io compatibility
+Ref: catches.fisher_id > users.id
+Ref: timeline_posts.author_id > users.id
+Ref: educational_content.author_id > users.id
+Ref: post_likes.user_id > users.id
+Ref: post_likes.post_id > timeline_posts.id
+
+// Design Notes:
+// - Only fishermen can log catches (enforced in application logic)
+// - Any user role can create timeline posts for community engagement
+// - Only educators and admins can create educational content (enforced in application logic)
+// - Timeline posts are independent and not directly related to catches
+// - This allows flexibility for different content types without forced relationships
