@@ -1,0 +1,155 @@
+{% extends 'catches/base.html' %}
+
+{% block title %}
+{% if catch %}Edit Catch{% else %}Log New Catch{% endif %} - Sustainable Fishing Platform
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="mb-0">
+                    {% if catch %}
+                    📝 Edit Catch: {{ catch.fish_type }}
+                    {% else %}
+                    🐟 Log New Catch
+                    {% endif %}
+                </h1>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.fish_type.id_for_label }}" class="form-label">
+                                    Fish Type <span class="text-danger">*</span>
+                                </label>
+                                {{ form.fish_type }}
+                                {% if form.fish_type.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.fish_type.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.weight.id_for_label }}" class="form-label">
+                                    Weight (kg) <span class="text-danger">*</span>
+                                </label>
+                                {{ form.weight }}
+                                {% if form.weight.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.weight.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.location.id_for_label }}" class="form-label">
+                                    Location <span class="text-danger">*</span>
+                                </label>
+                                {{ form.location }}
+                                {% if form.location.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.location.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.catch_date.id_for_label }}" class="form-label">
+                                    Catch Date <span class="text-danger">*</span>
+                                </label>
+                                {{ form.catch_date }}
+                                {% if form.catch_date.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.catch_date.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.status.id_for_label }}" class="form-label">
+                                    Status
+                                </label>
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.status.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.price.id_for_label }}" class="form-label">
+                                    Price ($)
+                                </label>
+                                {{ form.price }}
+                                {% if form.price.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.price.errors.0 }}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Optional - leave blank if not selling</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.notes.id_for_label }}" class="form-label">
+                            Additional Notes
+                        </label>
+                        {{ form.notes }}
+                        {% if form.notes.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.notes.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">Optional - any additional information about the catch</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% if catch %}{% url 'catches:catch_detail' catch.id %}{% else %}{% url 'catches:catch_list' %}{% endif %}" 
+                           class="btn btn-outline-secondary me-md-2">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            {% if catch %}Update Catch{% else %}Log Catch{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Set default catch date to today if creating new catch
+{% if not catch %}
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.querySelector('input[type="date"]');
+    if (dateInput && !dateInput.value) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+    }
+});
+{% endif %}
+</script>
+{% endblock %}
