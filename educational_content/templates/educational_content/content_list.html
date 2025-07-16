@@ -1,0 +1,158 @@
+{% extends 'educational_content/base.html' %}
+
+{% block title %}Educational Content - Sustainable Fishing Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>📚 Educational Content</h1>
+    {% if user.is_authenticated and user.is_staff %}
+    <a href="{% url 'educational_content:create' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Create Content
+    </a>
+    {% endif %}
+</div>
+
+<!-- Filter Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Filter Content</h5>
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label for="category" class="form-label">Category</label>
+                <select name="category" id="category" class="form-control">
+                    <option value="">All Categories</option>
+                    {% for value, label in category_choices %}
+                    <option value="{{ value }}" {% if category_filter == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="difficulty_level" class="form-label">Difficulty Level</label>
+                <select name="difficulty_level" id="difficulty_level" class="form-control">
+                    <option value="">All Levels</option>
+                    {% for value, label in difficulty_choices %}
+                    <option value="{{ value }}" {% if difficulty_filter == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="search" class="form-label">Search</label>
+                <input type="text" name="search" id="search" class="form-control" 
+                       value="{{ search_query|default:'' }}" placeholder="Search by title, content, or author">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-success me-2">Filter</button>
+                <a href="{% url 'educational_content:content_list' %}" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Content Grid -->
+{% if page_obj %}
+<div class="row">
+    {% for content in page_obj %}
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card content-card h-100 position-relative">
+            {% if content.featured %}
+            <div class="featured-badge">
+                <span class="badge bg-warning">⭐ Featured</span>
+            </div>
+            {% endif %}
+            
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ content.title }}</h5>
+                
+                <div class="mb-2">
+                    {% if content.category == 'sustainability' %}
+                    <span class="badge bg-success category-badge">🌱 {{ content.get_category_display }}</span>
+                    {% elif content.category == 'techniques' %}
+                    <span class="badge bg-primary category-badge">🎣 {{ content.get_category_display }}</span>
+                    {% elif content.category == 'regulations' %}
+                    <span class="badge bg-warning category-badge">⚖️ {{ content.get_category_display }}</span>
+                    {% else %}
+                    <span class="badge bg-info category-badge">🌊 {{ content.get_category_display }}</span>
+                    {% endif %}
+                    
+                    {% if content.difficulty_level == 'beginner' %}
+                    <span class="badge bg-success difficulty-badge">{{ content.get_difficulty_level_display }}</span>
+                    {% elif content.difficulty_level == 'intermediate' %}
+                    <span class="badge bg-warning difficulty-badge">{{ content.get_difficulty_level_display }}</span>
+                    {% else %}
+                    <span class="badge bg-danger difficulty-badge">{{ content.get_difficulty_level_display }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="content-preview mb-3 flex-grow-1">
+                    <p class="card-text">{{ content.content|truncatewords:20 }}</p>
+                </div>
+                
+                <div class="mt-auto">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <small class="text-muted">By {{ content.author.username }}</small>
+                        <small class="read-count">
+                            <i class="bi bi-eye"></i> {{ content.read_count }} read{{ content.read_count|pluralize }}
+                        </small>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">{{ content.created_at|date:"M j, Y" }}</small>
+                        <a href="{% url 'educational_content:detail' content.id %}" class="btn btn-outline-success btn-sm">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<nav aria-label="Content pagination">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if difficulty_filter %}&difficulty_level={{ difficulty_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+        </li>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }}</span>
+        </li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if difficulty_filter %}&difficulty_level={{ difficulty_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if difficulty_filter %}&difficulty_level={{ difficulty_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="text-center py-5">
+    <h3 class="text-muted">No educational content found</h3>
+    <p class="text-muted">
+        {% if search_query or category_filter or difficulty_filter %}
+        Try adjusting your filters or search terms.
+        {% else %}
+        {% if user.is_authenticated and user.is_staff %}
+        Be the first to create educational content!
+        {% else %}
+        Check back later for new educational content.
+        {% endif %}
+        {% endif %}
+    </p>
+    {% if user.is_authenticated and user.is_staff %}
+    <a href="{% url 'educational_content:create' %}" class="btn btn-success">Create First Content</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

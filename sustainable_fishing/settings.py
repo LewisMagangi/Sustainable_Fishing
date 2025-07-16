@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'admin_panel',  # Centralized admin for all apps
     'catches',
+    'educational_content',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,163 @@
+{% extends 'educational_content/base.html' %}
+
+{% block title %}
+{% if content %}Edit Content{% else %}Create New Content{% endif %} - Educational Content
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="mb-0">
+                    {% if content %}
+                    📝 Edit Content: {{ content.title }}
+                    {% else %}
+                    📚 Create New Educational Content
+                    {% endif %}
+                </h1>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="{{ form.title.id_for_label }}" class="form-label">
+                                    Title <span class="text-danger">*</span>
+                                </label>
+                                {{ form.title }}
+                                {% if form.title.help_text %}
+                                <div class="form-text">{{ form.title.help_text }}</div>
+                                {% endif %}
+                                {% if form.title.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.title.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.category.id_for_label }}" class="form-label">
+                                    Category <span class="text-danger">*</span>
+                                </label>
+                                {{ form.category }}
+                                {% if form.category.help_text %}
+                                <div class="form-text">{{ form.category.help_text }}</div>
+                                {% endif %}
+                                {% if form.category.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.category.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.content.id_for_label }}" class="form-label">
+                            Content <span class="text-danger">*</span>
+                        </label>
+                        {{ form.content }}
+                        {% if form.content.help_text %}
+                        <div class="form-text">{{ form.content.help_text }}</div>
+                        {% endif %}
+                        {% if form.content.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.content.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.difficulty_level.id_for_label }}" class="form-label">
+                                    Difficulty Level
+                                </label>
+                                {{ form.difficulty_level }}
+                                {% if form.difficulty_level.help_text %}
+                                <div class="form-text">{{ form.difficulty_level.help_text }}</div>
+                                {% endif %}
+                                {% if form.difficulty_level.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.difficulty_level.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    {{ form.is_published }}
+                                    <label for="{{ form.is_published.id_for_label }}" class="form-check-label">
+                                        Publish Content
+                                    </label>
+                                    {% if form.is_published.help_text %}
+                                    <div class="form-text">{{ form.is_published.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    {{ form.featured }}
+                                    <label for="{{ form.featured.id_for_label }}" class="form-check-label">
+                                        Feature Content
+                                    </label>
+                                    {% if form.featured.help_text %}
+                                    <div class="form-text">{{ form.featured.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% if content %}{% url 'educational_content:detail' content.id %}{% else %}{% url 'educational_content:content_list' %}{% endif %}" 
+                           class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
+                        
+                        <div>
+                            <button type="submit" class="btn btn-success">
+                                {% if content %}
+                                <i class="bi bi-check-circle"></i> Update Content
+                                {% else %}
+                                <i class="bi bi-plus-circle"></i> Create Content
+                                {% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        {% if content %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0">Preview</h5>
+            </div>
+            <div class="card-body">
+                <h6>{{ content.title }}</h6>
+                <div class="mb-2">
+                    <span class="badge bg-primary">{{ content.get_category_display }}</span>
+                    <span class="badge bg-secondary">{{ content.get_difficulty_level_display }}</span>
+                    {% if content.featured %}<span class="badge bg-warning">Featured</span>{% endif %}
+                    {% if content.is_published %}<span class="badge bg-success">Published</span>{% else %}<span class="badge bg-secondary">Draft</span>{% endif %}
+                </div>
+                <div class="content-preview" style="max-height: 200px; overflow-y: auto;">
+                    {{ content.content|linebreaks|truncatewords:50 }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
