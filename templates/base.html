@@ -44,7 +44,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'users:dashboard' %}">
+            <a class="navbar-brand" href="{% url 'content:home' %}">
                 <i class="fas fa-fish"></i> Sustainable Fishing
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -52,12 +52,21 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'content:home' %}">Home</a>
+                    </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'users:dashboard' %}">Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'users:user_list' %}">Community</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'content:content_list' %}">Educational Content</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'fishing:catch_list' %}">Catches</a>
                         </li>
                     {% endif %}
                 </ul>

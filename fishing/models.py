@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.urls import reverse
 
 
@@ -11,7 +11,7 @@ class Catch(models.Model):
     ]
     
     # Using the exact structure from catches app
-    fisher = models.ForeignKey(User, on_delete=models.CASCADE)
+    fisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fish_type = models.CharField(max_length=50)
     weight = models.DecimalField(max_digits=8, decimal_places=2)
     location = models.CharField(max_length=100)
