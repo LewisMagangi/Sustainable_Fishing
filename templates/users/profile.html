@@ -12,11 +12,11 @@
                     <div class="bg-gradient-to-r from-primary to-secondary p-6 text-center">
                         <div class="relative inline-block">
                             {% if user.profile_picture %}
-                                <img src="{{ user.profile_picture }}" 
+                                <img src="{{ user.profile_picture.url }}" 
                                      alt="Profile Picture" 
                                      class="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover">
                             {% else %}
-                                <div class="w-24 h-24 bg-white/20 rounded-full border-4 border-white shadow-lg flex items-center justify-content-center">
+                                <div class="w-24 h-24 bg-white/20 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
                                     <i class="fas fa-user text-white text-2xl"></i>
                                 </div>
                             {% endif %}
