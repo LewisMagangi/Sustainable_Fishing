@@ -31,6 +31,94 @@
                     <form method="post" enctype="multipart/form-data" class="space-y-6">
                         {% csrf_token %}
                         
+                        <!-- Profile Picture Upload Section -->
+                        <div class="mb-8">
+                            <label class="block text-sm font-medium text-gray-700 mb-4">
+                                <i class="fas fa-image mr-1"></i>Profile Picture
+                            </label>
+                            
+                            <div class="flex flex-col items-center space-y-4">
+                                <!-- Current Profile Picture -->
+                                <div class="relative">
+                                    <div id="profile-preview" class="w-32 h-32 rounded-full border-4 border-gray-200 overflow-hidden bg-gray-100 flex items-center justify-center">
+                                        {% if user.profile_picture %}
+                                            <img src="{{ user.profile_picture.url }}" 
+                                                 alt="Current Profile Picture" 
+                                                 class="w-full h-full object-cover">
+                                        {% else %}
+                                            <i class="fas fa-user text-gray-400 text-3xl"></i>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Edit overlay -->
+                                    <div class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer" id="profile-overlay">
+                                        <i class="fas fa-camera text-white text-xl"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Drag and Drop Area -->
+                                <div id="drop-area" class="w-full max-w-md border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-colors duration-300 hover:border-primary hover:bg-primary/5">
+                                    <div class="space-y-3">
+                                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400"></i>
+                                        <div>
+                                            <p class="text-gray-600 font-medium">Drag and drop your image here</p>
+                                            <p class="text-gray-500 text-sm">or</p>
+                                            <button type="button" 
+                                                    id="browse-btn" 
+                                                    class="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-lg font-medium transition-colors duration-300 mt-2">
+                                                Browse Files
+                                            </button>
+                                        </div>
+                                        <p class="text-gray-400 text-xs">
+                                            Supports: JPG, PNG, GIF • Max size: 5MB
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hidden file input -->
+                                <input type="file" 
+                                       id="{{ form.profile_picture.id_for_label }}"
+                                       name="{{ form.profile_picture.name }}"
+                                       accept="image/*"
+                                       class="hidden">
+                                
+                                <!-- Upload progress -->
+                                <div id="upload-progress" class="w-full max-w-md hidden">
+                                    <div class="bg-gray-200 rounded-full h-2">
+                                        <div class="bg-primary h-2 rounded-full transition-all duration-300" style="width: 0%" id="progress-bar"></div>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mt-2 text-center">Uploading...</p>
+                                </div>
+                                
+                                <!-- File info -->
+                                <div id="file-info" class="w-full max-w-md hidden">
+                                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                                <span class="text-green-700 text-sm font-medium" id="file-name"></span>
+                                            </div>
+                                            <button type="button" 
+                                                    id="remove-file" 
+                                                    class="text-red-500 hover:text-red-700 transition-colors">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {% if form.profile_picture.errors %}
+                                <div class="mt-2 text-sm text-red-600">
+                                    {% for error in form.profile_picture.errors %}
+                                        <p class="flex items-center">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>{{ error }}
+                                        </p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="{{ form.full_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
@@ -134,48 +222,6 @@
                         </div>
                         
                         <div>
-                            <label for="{{ form.profile_picture.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-image mr-1"></i>Profile Picture
-                            </label>
-                            
-                            <!-- Current profile picture preview -->
-                            {% if user.profile_picture %}
-                                <div class="mb-4 text-center">
-                                    <img src="{{ user.profile_picture.url }}" 
-                                         alt="Current Profile Picture" 
-                                         class="w-24 h-24 rounded-full mx-auto object-cover border-4 border-gray-200">
-                                    <p class="text-sm text-gray-600 mt-2">Current profile picture</p>
-                                </div>
-                            {% endif %}
-                            
-                            <div class="relative">
-                                <input type="file" 
-                                       id="{{ form.profile_picture.id_for_label }}"
-                                       name="{{ form.profile_picture.name }}"
-                                       accept="image/*"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-secondary">
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-upload text-gray-400"></i>
-                                </div>
-                            </div>
-                            
-                            <p class="mt-2 text-sm text-gray-600">
-                                <i class="fas fa-info-circle mr-1"></i>
-                                Choose an image file (JPG, PNG, GIF). Max size: 5MB
-                            </p>
-                            
-                            {% if form.profile_picture.errors %}
-                                <div class="mt-2 text-sm text-red-600">
-                                    {% for error in form.profile_picture.errors %}
-                                        <p class="flex items-center">
-                                            <i class="fas fa-exclamation-circle mr-1"></i>{{ error }}
-                                        </p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div>
                             <label for="{{ form.bio.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
                                 <i class="fas fa-file-alt mr-1"></i>Bio
                             </label>
@@ -227,4 +273,183 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropArea = document.getElementById('drop-area');
+    const fileInput = document.getElementById('{{ form.profile_picture.id_for_label }}');
+    const browseBtn = document.getElementById('browse-btn');
+    const profilePreview = document.getElementById('profile-preview');
+    const profileOverlay = document.getElementById('profile-overlay');
+    const uploadProgress = document.getElementById('upload-progress');
+    const progressBar = document.getElementById('progress-bar');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const removeFileBtn = document.getElementById('remove-file');
+    
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    // Highlight drop area when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight(e) {
+        dropArea.classList.add('border-primary', 'bg-primary/10');
+    }
+    
+    function unhighlight(e) {
+        dropArea.classList.remove('border-primary', 'bg-primary/10');
+    }
+    
+    // Handle dropped files
+    dropArea.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+    }
+    
+    // Handle browse button click
+    browseBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // Handle profile preview click
+    profileOverlay.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // Handle file input change
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
+        }
+    });
+    
+    // Handle file processing
+    function handleFile(file) {
+        // Validate file type
+        if (!file.type.match('image.*')) {
+            showError('Please select a valid image file (JPG, PNG, GIF)');
+            return;
+        }
+        
+        // Validate file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+            showError('File size must be less than 5MB');
+            return;
+        }
+        
+        // Show upload progress
+        showUploadProgress();
+        
+        // Create a new FileList with the dropped file and assign it to the input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+        
+        // Create file reader for preview
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            // Update preview
+            profilePreview.innerHTML = `<img src="${e.target.result}" alt="Profile Preview" class="w-full h-full object-cover">`;
+            
+            // Show file info
+            fileName.textContent = file.name;
+            fileInfo.classList.remove('hidden');
+            
+            // Hide upload progress
+            hideUploadProgress();
+            
+            // Hide drop area
+            dropArea.classList.add('hidden');
+        };
+        
+        reader.readAsDataURL(file);
+        
+        // Simulate upload progress
+        simulateUploadProgress();
+    }
+    
+    // Show upload progress
+    function showUploadProgress() {
+        uploadProgress.classList.remove('hidden');
+        progressBar.style.width = '0%';
+    }
+    
+    // Hide upload progress
+    function hideUploadProgress() {
+        uploadProgress.classList.add('hidden');
+    }
+    
+    // Simulate upload progress
+    function simulateUploadProgress() {
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 30;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+            }
+            progressBar.style.width = progress + '%';
+        }, 200);
+    }
+    
+    // Remove file
+    removeFileBtn.addEventListener('click', function() {
+        fileInput.value = '';
+        fileInfo.classList.add('hidden');
+        dropArea.classList.remove('hidden');
+        
+        // Reset preview to original or default
+        {% if user.profile_picture %}
+            profilePreview.innerHTML = `<img src="{{ user.profile_picture.url }}" alt="Current Profile Picture" class="w-full h-full object-cover">`;
+        {% else %}
+            profilePreview.innerHTML = `<i class="fas fa-user text-gray-400 text-3xl"></i>`;
+        {% endif %}
+    });
+    
+    // Show error message
+    function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg z-50';
+        errorDiv.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span>${message}</span>
+                <button class="ml-4 text-red-500 hover:text-red-700" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        document.body.appendChild(errorDiv);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (errorDiv.parentElement) {
+                errorDiv.remove();
+            }
+        }, 5000);
+    }
+});
+</script>
 {% endblock %}
