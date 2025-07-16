@@ -1,0 +1,189 @@
+{% extends 'educational_content/base.html' %}
+
+{% block title %}{{ content.title }} - Educational Content{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <article class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h1 class="mb-2">{{ content.title }}</h1>
+                        <div class="mb-2">
+                            {% if content.category == 'sustainability' %}
+                            <span class="badge bg-success">🌱 {{ content.get_category_display }}</span>
+                            {% elif content.category == 'techniques' %}
+                            <span class="badge bg-primary">🎣 {{ content.get_category_display }}</span>
+                            {% elif content.category == 'regulations' %}
+                            <span class="badge bg-warning">⚖️ {{ content.get_category_display }}</span>
+                            {% else %}
+                            <span class="badge bg-info">🌊 {{ content.get_category_display }}</span>
+                            {% endif %}
+                            
+                            {% if content.difficulty_level == 'beginner' %}
+                            <span class="badge bg-success">{{ content.get_difficulty_level_display }}</span>
+                            {% elif content.difficulty_level == 'intermediate' %}
+                            <span class="badge bg-warning">{{ content.get_difficulty_level_display }}</span>
+                            {% else %}
+                            <span class="badge bg-danger">{{ content.get_difficulty_level_display }}</span>
+                            {% endif %}
+                            
+                            {% if content.featured %}
+                            <span class="badge bg-warning">⭐ Featured</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="content-text">
+                    {{ content.content|linebreaks }}
+                </div>
+            </div>
+            
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            <i class="bi bi-person"></i> By {{ content.author.username }}
+                            {% if content.author.first_name or content.author.last_name %}
+                            ({{ content.author.first_name }} {{ content.author.last_name }})
+                            {% endif %}
+                        </small>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i> {{ content.created_at|date:"M j, Y g:i A" }}
+                            {% if content.updated_at != content.created_at %}
+                            • Updated {{ content.updated_at|date:"M j, Y g:i A" }}
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <small class="text-muted">
+                            <i class="bi bi-eye"></i> {{ content.read_count }} read{{ content.read_count|pluralize }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Actions Card -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0">Actions</h5>
+            </div>
+            <div class="card-body">
+                {% if user == content.author or user.is_superuser %}
+                <div class="d-grid gap-2">
+                    <a href="{% url 'educational_content:update' content.id %}" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Edit Content
+                    </a>
+                    <a href="{% url 'educational_content:delete' content.id %}" class="btn btn-outline-danger">
+                        <i class="bi bi-trash"></i> Delete Content
+                    </a>
+                </div>
+                <hr>
+                {% endif %}
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'educational_content:content_list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to All Content
+                    </a>
+                    {% if user.is_authenticated and user.is_staff %}
+                    <a href="{% url 'educational_content:my_content' %}" class="btn btn-outline-info">
+                        <i class="bi bi-collection"></i> My Content
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'educational_content:featured' %}" class="btn btn-outline-warning">
+                        <i class="bi bi-star"></i> Featured Content
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Content Info Card -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">Content Information</h6>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-borderless">
+                    <tr>
+                        <th>Content ID:</th>
+                        <td>#{{ content.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Category:</th>
+                        <td>{{ content.get_category_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>Difficulty:</th>
+                        <td>{{ content.get_difficulty_level_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            {% if content.is_published %}
+                            <span class="badge bg-success">Published</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Draft</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Featured:</th>
+                        <td>
+                            {% if content.featured %}
+                            <span class="text-warning">⭐ Yes</span>
+                            {% else %}
+                            No
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Word Count:</th>
+                        <td>~{{ content.content|wordcount }} words</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Related Content -->
+        {% if related_content %}
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Related {{ content.get_category_display }} Content</h6>
+            </div>
+            <div class="card-body">
+                {% for related in related_content %}
+                <div class="mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
+                    <h6 class="mb-1">
+                        <a href="{% url 'educational_content:detail' related.id %}" class="text-decoration-none">
+                            {{ related.title|truncatechars:50 }}
+                        </a>
+                    </h6>
+                    <small class="text-muted">
+                        By {{ related.author.username }} • {{ related.created_at|date:"M j" }}
+                        {% if related.difficulty_level == 'beginner' %}
+                        <span class="badge bg-success">{{ related.get_difficulty_level_display }}</span>
+                        {% elif related.difficulty_level == 'intermediate' %}
+                        <span class="badge bg-warning">{{ related.get_difficulty_level_display }}</span>
+                        {% else %}
+                        <span class="badge bg-danger">{{ related.get_difficulty_level_display }}</span>
+                        {% endif %}
+                    </small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
