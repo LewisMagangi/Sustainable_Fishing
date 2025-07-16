@@ -1,0 +1,459 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Dashboard - {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Sustainable Fishing Platform Dashboard</h1>
+        <p class="text-muted">Welcome to the administration dashboard. Here's an overview of your platform's activity.</p>
+    </div>
+
+    <!-- Statistics Overview -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ admin_stats.total_users }}</h3>
+                <p>Total Users</p>
+                <small>{{ admin_stats.active_users }} active</small>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-fish"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ admin_stats.total_catches }}</h3>
+                <p>Total Catches</p>
+                <small>{{ admin_stats.total_weight }} kg total</small>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ admin_stats.total_posts }}</h3>
+                <p>Timeline Posts</p>
+                <small>{{ admin_stats.total_likes }} total likes</small>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ admin_stats.total_educational }}</h3>
+                <p>Educational Content</p>
+                <small>{{ admin_stats.published_educational }} published</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="dashboard-section">
+        <h2>Recent Activity</h2>
+        <div class="activity-grid">
+            <div class="activity-card">
+                <h3>New Users</h3>
+                <div class="activity-list">
+                    {% for user in recent_users %}
+                        <div class="activity-item">
+                            <div class="activity-avatar">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture }}" alt="{{ user.username }}">
+                                {% else %}
+                                    <i class="fas fa-user"></i>
+                                {% endif %}
+                            </div>
+                            <div class="activity-details">
+                                <strong>{{ user.full_name|default:user.username }}</strong>
+                                <span class="role-badge role-{{ user.role }}">{{ user.get_role_display }}</span>
+                                <small>{{ user.created_at|timesince }} ago</small>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No recent users</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <h3>Recent Catches</h3>
+                <div class="activity-list">
+                    {% for catch in recent_catches %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-fish"></i>
+                            </div>
+                            <div class="activity-details">
+                                <strong>{{ catch.fish_type }}</strong>
+                                <span>{{ catch.weight }}kg by {{ catch.fisher.username }}</span>
+                                <small>{{ catch.created_at|timesince }} ago</small>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No recent catches</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <h3>Recent Posts</h3>
+                <div class="activity-list">
+                    {% for post in recent_posts %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <div class="activity-details">
+                                <strong>{{ post.title|truncatechars:30 }}</strong>
+                                <span>by {{ post.author.username }}</span>
+                                <small>{{ post.created_at|timesince }} ago</small>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No recent posts</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="dashboard-section">
+        <h2>Quick Actions</h2>
+        <div class="quick-actions">
+            <a href="{% url 'admin:users_user_add' %}" class="action-button">
+                <i class="fas fa-user-plus"></i>
+                Add New User
+            </a>
+            <a href="{% url 'admin:fishing_catch_add' %}" class="action-button">
+                <i class="fas fa-plus"></i>
+                Add Catch Record
+            </a>
+            <a href="{% url 'admin:content_timelinepost_add' %}" class="action-button">
+                <i class="fas fa-edit"></i>
+                Create Post
+            </a>
+            <a href="{% url 'admin:content_educationalcontent_add' %}" class="action-button">
+                <i class="fas fa-book"></i>
+                Add Educational Content
+            </a>
+        </div>
+    </div>
+
+    <!-- Top Performers -->
+    <div class="dashboard-section">
+        <h2>Top Performers</h2>
+        <div class="performers-grid">
+            <div class="performer-card">
+                <h3>Top Fishermen</h3>
+                <div class="performer-list">
+                    {% for fisher in top_fishermen %}
+                        <div class="performer-item">
+                            <span class="performer-name">{{ fisher.full_name|default:fisher.username }}</span>
+                            <span class="performer-stat">{{ fisher.catch_count }} catches</span>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No data available</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="performer-card">
+                <h3>Top Educators</h3>
+                <div class="performer-list">
+                    {% for educator in top_educators %}
+                        <div class="performer-item">
+                            <span class="performer-name">{{ educator.full_name|default:educator.username }}</span>
+                            <span class="performer-stat">{{ educator.content_count }} content</span>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No data available</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    .dashboard-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .dashboard-header h1 {
+        color: #495057;
+        margin-bottom: 10px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+    }
+
+    .stat-info h3 {
+        margin: 0;
+        font-size: 24px;
+        color: #495057;
+    }
+
+    .stat-info p {
+        margin: 5px 0;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .stat-info small {
+        color: #adb5bd;
+    }
+
+    .dashboard-section {
+        margin-bottom: 30px;
+    }
+
+    .dashboard-section h2 {
+        color: #495057;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .activity-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .activity-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .activity-card h3 {
+        margin-top: 0;
+        color: #495057;
+        font-size: 16px;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f8f9fa;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .activity-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+    }
+
+    .activity-details {
+        flex: 1;
+    }
+
+    .activity-details strong {
+        display: block;
+        color: #495057;
+    }
+
+    .activity-details span {
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .activity-details small {
+        color: #adb5bd;
+        font-size: 12px;
+    }
+
+    .role-badge {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-left: 5px;
+    }
+
+    .role-fisherman {
+        background: #cce5ff;
+        color: #004085;
+    }
+
+    .role-educator {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .role-admin {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .action-button {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px 20px;
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #495057;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .action-button:hover {
+        border-color: #007bff;
+        background: #f8f9fa;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .performers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .performer-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .performer-card h3 {
+        margin-top: 0;
+        color: #495057;
+        font-size: 16px;
+    }
+
+    .performer-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f8f9fa;
+    }
+
+    .performer-item:last-child {
+        border-bottom: none;
+    }
+
+    .performer-name {
+        color: #495057;
+        font-weight: 500;
+    }
+
+    .performer-stat {
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .text-muted {
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .activity-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+        
+        .performers-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

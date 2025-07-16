@@ -1,0 +1,368 @@
+/* Custom Admin CSS for Sustainable Fishing */
+
+/* Header styling */
+#header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+#header h1 {
+    color: white;
+}
+
+#header a:link, #header a:visited {
+    color: white;
+}
+
+/* Breadcrumbs styling */
+.breadcrumbs {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 8px 20px;
+}
+
+.breadcrumbs a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+/* Change list improvements */
+.change-list .results {
+    overflow-x: auto;
+}
+
+.change-list .results table {
+    min-width: 100%;
+}
+
+/* Action buttons styling */
+.actions {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+.actions select {
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 6px 12px;
+}
+
+.actions button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.actions button:hover {
+    background-color: #0056b3;
+}
+
+/* Form improvements */
+.form-row {
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.form-row input, .form-row select, .form-row textarea {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 8px 12px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Filter sidebar improvements */
+#changelist-filter {
+    background-color: #f8f9fa;
+    border-left: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+#changelist-filter h2 {
+    color: #495057;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+#changelist-filter h3 {
+    color: #6c757d;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-top: 15px;
+}
+
+#changelist-filter ul {
+    list-style: none;
+    padding: 0;
+}
+
+#changelist-filter li {
+    margin-bottom: 5px;
+}
+
+#changelist-filter a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+#changelist-filter a:hover {
+    text-decoration: underline;
+}
+
+/* Statistics summary styling */
+.summary-stats {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.summary-stats h3 {
+    color: #495057;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.stat-item {
+    display: inline-block;
+    margin-right: 20px;
+    padding: 8px 12px;
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.stat-item .stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #007bff;
+}
+
+.stat-item .stat-label {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* Profile picture preview styling */
+.profile-picture-preview {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #dee2e6;
+}
+
+/* Status indicators */
+.status-indicator {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-active {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-inactive {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status-sold {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-unsold {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-donated {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    #changelist-filter {
+        display: none;
+    }
+    
+    .change-list .results table {
+        font-size: 12px;
+    }
+    
+    .actions {
+        text-align: center;
+    }
+    
+    .actions select, .actions button {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .summary-stats {
+        background-color: #343a40;
+        border-color: #495057;
+    }
+    
+    .stat-item {
+        background-color: #495057;
+        border-color: #6c757d;
+    }
+    
+    .stat-item .stat-value {
+        color: #80bdff;
+    }
+    
+    .stat-item .stat-label {
+        color: #adb5bd;
+    }
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border: 2px solid #007bff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Inline editing improvements */
+.inline-group {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.inline-group .tabular {
+    background-color: white;
+}
+
+.inline-group .tabular thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+}
+
+.inline-group .tabular tbody td {
+    padding: 8px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Success/Error messages */
+.messagelist {
+    margin: 0;
+    padding: 0;
+}
+
+.messagelist li {
+    padding: 12px 20px;
+    margin: 0;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 500;
+}
+
+.messagelist .success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.messagelist .error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.messagelist .warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+/* Custom dashboard widgets */
+.dashboard-widget {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-widget h3 {
+    color: #495057;
+    font-size: 18px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+}
+
+.widget-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.widget-metric:last-child {
+    border-bottom: none;
+}
+
+.widget-metric-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #007bff;
+}
+
+.widget-metric-label {
+    color: #6c757d;
+    font-size: 14px;
+}

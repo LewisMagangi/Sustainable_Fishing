@@ -120,6 +120,8 @@ When you contribute to this project, please add your information to this list in
 ### Current Contributors:
 
 - **[Lewis Magangi](https://github.com/LewisMagangi)** - Project creator and maintainer
+- **[Fidel](https://github.com/phantom-kali)** - Dev
+
 <!-- Add your name here when you contribute! -->
 
 ## Feature Requests

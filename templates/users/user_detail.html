@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if profile_user.profile_picture %}
+                    <img src="{{ profile_user.profile_picture }}" alt="Profile Picture" class="profile-img mb-3">
+                {% else %}
+                    <div class="profile-img mb-3 mx-auto d-flex align-items-center justify-content-center" style="background-color: #f8f9fa; border: 2px dashed #dee2e6;">
+                        <i class="fas fa-user fa-3x text-muted"></i>
+                    </div>
+                {% endif %}
+                
+                <h4>{{ profile_user.full_name|default:profile_user.username }}</h4>
+                <p class="text-muted">{{ profile_user.get_role_display }}</p>
+                
+                {% if profile_user.location %}
+                    <p><i class="fas fa-map-marker-alt"></i> {{ profile_user.location }}</p>
+                {% endif %}
+                
+                {% if profile_user.bio %}
+                    <p class="text-muted">{{ profile_user.bio }}</p>
+                {% endif %}
+                
+                <p class="text-muted small">Member since {{ profile_user.created_at|date:"F Y" }}</p>
+                
+                {% if user.is_authenticated and user != profile_user %}
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" onclick="sendMessage('{{ profile_user.username }}')">
+                            <i class="fas fa-envelope"></i> Send Message
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-fish fa-2x mb-2"></i>
+                        <h3>{{ total_catches }}</h3>
+                        <p class="mb-0">Total Catches</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-comments fa-2x mb-2"></i>
+                        <h3>{{ total_posts }}</h3>
+                        <p class="mb-0">Timeline Posts</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-graduation-cap fa-2x mb-2"></i>
+                        <h3>{{ total_educational }}</h3>
+                        <p class="mb-0">Educational Content</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabs for different content -->
+        <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="catches-tab" data-bs-toggle="tab" data-bs-target="#catches" type="button" role="tab">
+                    <i class="fas fa-fish"></i> Catches
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts" type="button" role="tab">
+                    <i class="fas fa-comments"></i> Posts
+                </button>
+            </li>
+            {% if educational_content %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="educational-tab" data-bs-toggle="tab" data-bs-target="#educational" type="button" role="tab">
+                        <i class="fas fa-graduation-cap"></i> Educational
+                    </button>
+                </li>
+            {% endif %}
+        </ul>
+        
+        <div class="tab-content" id="profileTabsContent">
+            <!-- Catches Tab -->
+            <div class="tab-pane fade show active" id="catches" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+                        {% if recent_catches %}
+                            {% for catch in recent_catches %}
+                                <div class="activity-item">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6>{{ catch.fish_type }} - {{ catch.weight }}kg</h6>
+                                            <p class="text-muted">{{ catch.location }}</p>
+                                        </div>
+                                        <div class="text-end">
+                                            <small class="text-muted">{{ catch.catch_date }}</small>
+                                            <br>
+                                            <span class="badge bg-{{ catch.status|yesno:'success,warning,info' }}">
+                                                {{ catch.get_status_display }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No catches recorded yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Posts Tab -->
+            <div class="tab-pane fade" id="posts" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+                        {% if recent_posts %}
+                            {% for post in recent_posts %}
+                                <div class="activity-item">
+                                    <h6>{{ post.title }}</h6>
+                                    <p class="text-muted">{{ post.content|truncatewords:30 }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ post.created_at|date:"M d, Y" }}</small>
+                                        <div>
+                                            <span class="badge bg-primary">{{ post.get_post_type_display }}</span>
+                                            <span class="text-muted small">
+                                                <i class="fas fa-heart"></i> {{ post.likes_count }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No posts shared yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Educational Content Tab -->
+            {% if educational_content %}
+                <div class="tab-pane fade" id="educational" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            {% for content in educational_content %}
+                                <div class="activity-item">
+                                    <h6>{{ content.title }}</h6>
+                                    <p class="text-muted">{{ content.content|truncatewords:30 }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ content.created_at|date:"M d, Y" }}</small>
+                                        <div>
+                                            <span class="badge bg-info">{{ content.get_category_display }}</span>
+                                            <span class="badge bg-secondary">{{ content.get_difficulty_level_display }}</span>
+                                            <span class="text-muted small">
+                                                <i class="fas fa-eye"></i> {{ content.read_count }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function sendMessage(username) {
+    alert('Message functionality coming soon! You can contact ' + username + ' directly.');
+}
+</script>
+{% endblock %}
