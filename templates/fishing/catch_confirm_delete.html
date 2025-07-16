@@ -1,4 +1,4 @@
-{% extends 'catches/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Delete Catch - {{ catch.fish_type }}{% endblock %}
 
@@ -56,7 +56,7 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{% url 'catches:catch_detail' catch.id %}" class="btn btn-outline-secondary me-md-2">
+                        <a href="{% url 'fishing:catch_detail' catch.id %}" class="btn btn-outline-secondary me-md-2">
                             Cancel
                         </a>
                         <button type="submit" class="btn btn-danger">
