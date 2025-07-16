@@ -25,4 +25,5 @@ urlpatterns = [
     path('', home_redirect, name='home'),
     path('admin/', admin.site.urls),
     path('catches/', include('catches.urls')),
+    path('education/', include('educational_content.urls')),
 ]

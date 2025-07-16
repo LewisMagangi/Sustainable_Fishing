@@ -5,6 +5,7 @@ from django.utils.safestring import mark_safe
 
 # Import models from all apps that need admin interface
 from catches.models import Catch
+from educational_content.models import EducationalContent
 
 
 @admin.register(Catch)
@@ -69,51 +70,81 @@ class CatchAdmin(admin.ModelAdmin):
     price_display.short_description = 'Price'
     price_display.admin_order_field = 'price'
     
-    def get_queryset(self, request):
-        """Optimize queryset with select_related for better performance"""
-        queryset = super().get_queryset(request)
-        return queryset.select_related('fisher')
+
+@admin.register(EducationalContent)
+class EducationalContentAdmin(admin.ModelAdmin):
+    """Centralized admin for Educational Content model"""
+    list_display = ['title', 'author_link', 'category_badge', 'difficulty_badge', 'published_status', 'featured_status', 'read_count', 'created_at']
+    list_filter = ['category', 'difficulty_level', 'is_published', 'featured', 'created_at', 'author']
+    search_fields = ['title', 'content', 'author__username', 'author__first_name', 'author__last_name']
+    date_hierarchy = 'created_at'
+    ordering = ['-created_at']
+    readonly_fields = ['read_count', 'created_at', 'updated_at']
+    list_per_page = 25
     
-    def save_model(self, request, obj, form, change):
-        """Custom save logic - could add logging or notifications here"""
-        if not change:  # Creating new catch
-            # Log who created the catch (if needed)
-            pass
-        super().save_model(request, obj, form, change)
+    fieldsets = (
+        ('Content Information', {
+            'fields': ('author', 'title', 'content', 'category', 'difficulty_level'),
+            'description': 'Basic educational content information'
+        }),
+        ('Publication Settings', {
+            'fields': ('is_published', 'featured'),
+            'description': 'Control content visibility and prominence'
+        }),
+        ('Statistics', {
+            'fields': ('read_count',),
+            'classes': ('collapse',),
+            'description': 'Content engagement statistics'
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
+            'description': 'System timestamps'
+        }),
+    )
     
-    actions = ['mark_as_sold', 'mark_as_unsold', 'mark_as_donated']
+    def author_link(self, obj):
+        url = reverse('admin:auth_user_change', args=[obj.author.pk])
+        return format_html('<a href="{}">{}</a>', url, obj.author.username)
+    author_link.short_description = 'Author'
     
-    def mark_as_sold(self, request, queryset):
-        """Bulk action to mark catches as sold"""
-        updated = queryset.update(status='sold')
-        self.message_user(request, f'{updated} catches were successfully marked as sold.')
-    mark_as_sold.short_description = "Mark selected catches as sold"
+    def category_badge(self, obj):
+        colors = {
+            'sustainability': '#28a745',
+            'techniques': '#007bff', 
+            'regulations': '#ffc107',
+            'conservation': '#17a2b8'
+        }
+        color = colors.get(obj.category, '#6c757d')
+        return format_html(
+            '<span style="background-color: {}; color: white; padding: 3px 8px; border-radius: 3px;">{}</span>',
+            color, obj.get_category_display()
+        )
+    category_badge.short_description = 'Category'
     
-    def mark_as_unsold(self, request, queryset):
-        """Bulk action to mark catches as unsold"""
-        updated = queryset.update(status='unsold')
-        self.message_user(request, f'{updated} catches were successfully marked as unsold.')
-    mark_as_unsold.short_description = "Mark selected catches as unsold"
+    def difficulty_badge(self, obj):
+        colors = {'beginner': '#28a745', 'intermediate': '#ffc107', 'advanced': '#dc3545'}
+        color = colors.get(obj.difficulty_level, '#6c757d')
+        return format_html(
+            '<span style="background-color: {}; color: white; padding: 3px 8px; border-radius: 3px;">{}</span>',
+            color, obj.get_difficulty_level_display()
+        )
+    difficulty_badge.short_description = 'Difficulty'
     
-    def mark_as_donated(self, request, queryset):
-        """Bulk action to mark catches as donated"""
-        updated = queryset.update(status='donated')
-        self.message_user(request, f'{updated} catches were successfully marked as donated.')
-    mark_as_donated.short_description = "Mark selected catches as donated"
+    def published_status(self, obj):
+        if obj.is_published:
+            return format_html('<span style="color: #28a745; font-weight: bold;">✓ Published</span>')
+        return format_html('<span style="color: #dc3545; font-weight: bold;">✗ Draft</span>')
+    published_status.short_description = 'Status'
+    
+    def featured_status(self, obj):
+        if obj.featured:
+            return format_html('<span style="color: #ffc107;">⭐ Featured</span>')
+        return format_html('<span style="color: #6c757d;">-</span>')
+    featured_status.short_description = 'Featured'
 
 
-# Future admin classes for other apps will go here:
-# 
-# @admin.register(User)
-# class UserAdmin(admin.ModelAdmin):
-#     """Centralized admin for User model"""
-#     pass
-# 
-# @admin.register(EducationalContent)
-# class EducationalContentAdmin(admin.ModelAdmin):
-#     """Centralized admin for Educational Content model"""
-#     pass
-# 
+# Future admin classes will go here:
 # @admin.register(TimelinePost)
 # class TimelinePostAdmin(admin.ModelAdmin):
 #     """Centralized admin for Timeline Posts model"""
