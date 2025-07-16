@@ -11,8 +11,8 @@ SECRET_KEY = config('SECRET_KEY', default="django-insecure-ki)+%eng&-v5u$z%5_7^=
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default="*").split(',')
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "http://1270.0.1:8000"]
-CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://127.0.1:8000"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "http://1270.0.1:8000", "https://sustainablefishing.onrender.com"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://127.0.1:8000", "https://sustainablefishing.onrender.com"]
 
 
 INSTALLED_APPS = [
