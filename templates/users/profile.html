@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if user.profile_picture %}
+                    <img src="{{ user.profile_picture }}" alt="Profile Picture" class="profile-img mb-3">
+                {% else %}
+                    <div class="profile-img mb-3 mx-auto d-flex align-items-center justify-content-center" style="background-color: #f8f9fa; border: 2px dashed #dee2e6;">
+                        <i class="fas fa-user fa-3x text-muted"></i>
+                    </div>
+                {% endif %}
+                
+                <h4>{{ user.full_name|default:user.username }}</h4>
+                <p class="text-muted">{{ user.get_role_display }}</p>
+                
+                {% if user.location %}
+                    <p><i class="fas fa-map-marker-alt"></i> {{ user.location }}</p>
+                {% endif %}
+                
+                {% if user.bio %}
+                    <p class="text-muted">{{ user.bio }}</p>
+                {% endif %}
+                
+                <p class="text-muted small">Member since {{ user.created_at|date:"F Y" }}</p>
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'users:edit_profile' %}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </a>
+                    <a href="{% url 'users:change_password' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-lock"></i> Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-fish fa-2x mb-2"></i>
+                        <h3>{{ total_catches }}</h3>
+                        <p class="mb-0">Total Catches</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-comments fa-2x mb-2"></i>
+                        <h3>{{ total_posts }}</h3>
+                        <p class="mb-0">Timeline Posts</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-graduation-cap fa-2x mb-2"></i>
+                        <h3>{{ total_educational }}</h3>
+                        <p class="mb-0">Educational Content</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-clock"></i> Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <!-- Recent Catches -->
+                {% if recent_catches %}
+                    <h6>Recent Catches</h6>
+                    {% for catch in recent_catches %}
+                        <div class="activity-item">
+                            <h6>{{ catch.fish_type }} - {{ catch.weight }}kg</h6>
+                            <p class="text-muted">{{ catch.location }} • {{ catch.catch_date }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <!-- Recent Posts -->
+                {% if recent_posts %}
+                    <h6 class="mt-4">Recent Posts</h6>
+                    {% for post in recent_posts %}
+                        <div class="activity-item">
+                            <h6>{{ post.title }}</h6>
+                            <p class="text-muted">{{ post.content|truncatewords:20 }}</p>
+                            <small class="text-muted">{{ post.created_at|date:"M d, Y" }}</small>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <!-- Educational Content (for educators) -->
+                {% if educational_content %}
+                    <h6 class="mt-4">Educational Content</h6>
+                    {% for content in educational_content %}
+                        <div class="activity-item">
+                            <h6>{{ content.title }}</h6>
+                            <p class="text-muted">{{ content.category|title }} • {{ content.difficulty_level|title }}</p>
+                            <small class="text-muted">{{ content.created_at|date:"M d, Y" }}</small>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                {% if not recent_catches and not recent_posts and not educational_content %}
+                    <p class="text-muted">No recent activity to display.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
