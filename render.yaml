@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
-    startCommand: "gunicorn sustainable_fishing.wsgi:application"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT sustainable_fishing.wsgi:application"
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: sustainable_fishing.settings.production
