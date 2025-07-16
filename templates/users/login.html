@@ -3,45 +3,102 @@
 {% block title %}Login - Sustainable Fishing{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0"><i class="fas fa-sign-in-alt"></i> Login</h4>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-accent/20 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full mx-auto space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-fish text-white text-2xl"></i>
             </div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-                        {{ form.username }}
-                        {% if form.username.errors %}
-                            <div class="text-danger">{{ form.username.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
-                        {{ form.password }}
-                        {% if form.password.errors %}
-                            <div class="text-danger">{{ form.password.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {{ form.non_field_errors }}
+            <h2 class="mt-6 text-3xl font-bold text-gray-900">
+                Welcome back
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                Sign in to your Sustainable Fishing account
+            </p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-user text-primary mr-2"></i>Username
+                    </label>
+                    <input type="text" 
+                           name="{{ form.username.name }}" 
+                           id="{{ form.username.id_for_label }}"
+                           value="{{ form.username.value|default:'' }}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                           placeholder="Enter your username"
+                           required>
+                    {% if form.username.errors %}
+                        <div class="mt-1 text-sm text-red-600">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            {{ form.username.errors.0 }}
                         </div>
                     {% endif %}
-                    
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                </form>
+                </div>
                 
-                <div class="text-center mt-3">
-                    <p>Don't have an account? <a href="{% url 'users:register' %}">Register here</a></p>
+                <div>
+                    <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-lock text-primary mr-2"></i>Password
+                    </label>
+                    <input type="password" 
+                           name="{{ form.password.name }}" 
+                           id="{{ form.password.id_for_label }}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                           placeholder="Enter your password"
+                           required>
+                    {% if form.password.errors %}
+                        <div class="mt-1 text-sm text-red-600">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            {{ form.password.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if form.non_field_errors %}
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="text-sm text-red-700">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            {{ form.non_field_errors.0 }}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white font-medium py-3 px-4 rounded-lg hover:from-primary/90 hover:to-secondary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200 transform hover:scale-105">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Sign In
+                </button>
+            </form>
+            
+            <div class="mt-8 text-center">
+                <p class="text-sm text-gray-600">
+                    Don't have an account? 
+                    <a href="{% url 'users:register' %}" class="font-medium text-primary hover:text-secondary transition-colors duration-200">
+                        Create one now
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="bg-white/50 backdrop-blur-sm rounded-xl p-6 text-center">
+            <div class="flex items-center justify-center space-x-6 text-sm text-gray-600">
+                <div class="flex items-center">
+                    <i class="fas fa-shield-alt text-green-500 mr-2"></i>
+                    Secure Login
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-users text-blue-500 mr-2"></i>
+                    Join Community
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-leaf text-green-600 mr-2"></i>
+                    Sustainable Fishing
                 </div>
             </div>
         </div>
