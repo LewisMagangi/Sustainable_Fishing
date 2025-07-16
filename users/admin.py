@@ -65,7 +65,7 @@ class UserAdmin(BaseUserAdmin):
         if obj.profile_picture:
             return format_html(
                 '<img src="{}" width="50" height="50" style="border-radius: 50%; object-fit: cover;" />',
-                obj.profile_picture
+                obj.profile_picture.url
             )
         return format_html(
             '<div style="width: 50px; height: 50px; border-radius: 50%; background-color: #f8f9fa; '

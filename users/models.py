@@ -12,7 +12,7 @@ class User(AbstractUser):
     
     full_name = models.CharField(max_length=100, blank=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='fisherman')
-    profile_picture = models.CharField(max_length=255, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     bio = models.TextField(blank=True)
     location = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(default=timezone.now)

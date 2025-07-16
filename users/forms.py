@@ -53,14 +53,17 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ('full_name', 'email', 'role', 'location', 'bio', 'profile_picture')
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 4}),
-            'profile_picture': forms.URLInput(attrs={'placeholder': 'Profile picture URL'}),
+            'profile_picture': forms.FileInput(attrs={'accept': 'image/*'}),
         }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Add CSS classes for styling
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+            if field_name == 'profile_picture':
+                field.widget.attrs['class'] = 'form-control-file'
+            else:
+                field.widget.attrs['class'] = 'form-control'
 
 
 class PasswordChangeForm(forms.Form):
