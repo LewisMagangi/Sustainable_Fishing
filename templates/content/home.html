@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative min-h-[75vh] flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-accent"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="text-white animate-fadeInUp">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                    Sustainable<br>
+                    <span class="text-yellow-400">Fishing</span><br>
+                    <span class="text-2xl md:text-3xl font-normal">Community</span>
+                </h1>
+                <p class="text-lg md:text-xl mb-8 max-w-md leading-relaxed">
+                    Join thousands of responsible fishermen and marine conservation advocates working together to protect our oceans while enjoying sustainable fishing practices.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'users:dashboard' %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                            <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                        </a>
+                        <a href="{% url 'users:user_list' %}" class="border-2 border-white text-white hover:bg-white hover:text-primary px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-users mr-2"></i>Explore Community
+                        </a>
+                    {% else %}
+                        <a href="{% url 'users:register' %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                            <i class="fas fa-user-plus mr-2"></i>Join Community
+                        </a>
+                        <a href="{% url 'users:login' %}" class="border-2 border-white text-white hover:bg-white hover:text-primary px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="text-center animate-fadeInRight">
+                <div class="relative">
+                    <div class="inline-flex items-center justify-center w-72 h-72 bg-white/10 rounded-full backdrop-blur-md">
+                        <i class="fas fa-fish text-8xl text-white/80"></i>
+                    </div>
+                    <div class="absolute top-4 left-4 w-6 h-6 bg-white/20 rounded-full animate-float"></div>
+                    <div class="absolute top-8 right-6 w-4 h-4 bg-white/30 rounded-full animate-float" style="animation-delay: 1s;"></div>
+                    <div class="absolute bottom-8 left-8 w-5 h-5 bg-white/25 rounded-full animate-float" style="animation-delay: 2s;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Platform Statistics -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 text-center transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
+                <div class="text-primary mb-4">
+                    <i class="fas fa-graduation-cap text-4xl"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-primary mb-2">{{ stats.total_content }}</h3>
+                <p class="text-gray-600 mb-4">Educational Resources</p>
+                <div class="w-full bg-gray-200 rounded-full h-1">
+                    <div class="bg-primary h-1 rounded-full" style="width: 75%"></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-8 text-center transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
+                <div class="text-green-500 mb-4">
+                    <i class="fas fa-comments text-4xl"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-green-500 mb-2">{{ stats.total_posts }}</h3>
+                <p class="text-gray-600 mb-4">Community Posts</p>
+                <div class="w-full bg-gray-200 rounded-full h-1">
+                    <div class="bg-green-500 h-1 rounded-full" style="width: 85%"></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-8 text-center transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
+                <div class="text-yellow-500 mb-4">
+                    <i class="fas fa-star text-4xl"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-yellow-500 mb-2">{{ stats.featured_content_count }}</h3>
+                <p class="text-gray-600 mb-4">Featured Content</p>
+                <div class="w-full bg-gray-200 rounded-full h-1">
+                    <div class="bg-yellow-500 h-1 rounded-full" style="width: 60%"></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-8 text-center transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
+                <div class="text-blue-500 mb-4">
+                    <i class="fas fa-users text-4xl"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-blue-500 mb-2">2,500+</h3>
+                <p class="text-gray-600 mb-4">Active Members</p>
+                <div class="w-full bg-gray-200 rounded-full h-1">
+                    <div class="bg-blue-500 h-1 rounded-full" style="width: 90%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Educational Content -->
+{% if featured_content %}
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <span class="bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold mb-4 inline-block">
+                ⭐ Featured
+            </span>
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Educational Excellence</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Discover our most impactful content for sustainable fishing practices
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for content in featured_content %}
+            <article class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300 hover:shadow-xl relative">
+                <div class="absolute top-0 left-0 bg-yellow-500 text-white px-3 py-1 rounded-br-lg font-semibold text-sm z-10">
+                    <i class="fas fa-star mr-1"></i>Featured
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex space-x-2">
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                                {{ content.category }}
+                            </span>
+                        </div>
+                        <span class="text-gray-500 text-sm">{{ content.created_at|date:"M d" }}</span>
+                    </div>
+                    
+                    <h5 class="text-xl font-bold mb-3">
+                        <a href="{% url 'content:detail' content.id %}" class="text-gray-800 hover:text-primary transition-colors duration-200">
+                            {{ content.title }}
+                        </a>
+                    </h5>
+                    <p class="text-gray-600 mb-4">
+                        {{ content.content|truncatewords:20 }}
+                    </p>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-white text-xs"></i>
+                            </div>
+                            <span class="text-sm text-gray-600">{{ content.author.username }}</span>
+                        </div>
+                        <span class="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">
+                            {{ content.difficulty_level|default:"Beginner" }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 px-6 py-4 border-t">
+                    <div class="flex justify-between items-center">
+                        <small class="text-gray-500">
+                            {{ content.created_at|timesince }} ago
+                        </small>
+                        <a href="{% url 'content:detail' content.id %}" class="text-primary hover:text-secondary font-medium text-sm transition-colors duration-200">
+                            Read More →
+                        </a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'content:featured' %}" class="bg-primary hover:bg-secondary text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                <i class="fas fa-star mr-2"></i>View All Featured Content
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Latest Educational Content -->
+{% if latest_content %}
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <span class="bg-primary text-white px-4 py-2 rounded-full font-semibold mb-4 inline-block">
+                🆕 Latest
+            </span>
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Fresh Knowledge</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Stay updated with the latest educational content from our community
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for content in latest_content %}
+            <article class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                            {{ content.category }}
+                        </span>
+                        <span class="text-gray-500 text-sm">{{ content.created_at|date:"M d" }}</span>
+                    </div>
+                    
+                    <h5 class="text-xl font-bold mb-3">
+                        <a href="{% url 'content:detail' content.id %}" class="text-gray-800 hover:text-primary transition-colors duration-200">
+                            {{ content.title }}
+                        </a>
+                    </h5>
+                    <p class="text-gray-600 mb-4">
+                        {{ content.content|truncatewords:20 }}
+                    </p>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-white text-xs"></i>
+                            </div>
+                            <span class="text-sm text-gray-600">{{ content.author.username }}</span>
+                        </div>
+                        <span class="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">
+                            {{ content.difficulty_level|default:"Beginner" }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 px-6 py-4 border-t">
+                    <div class="flex justify-between items-center">
+                        <small class="text-gray-500">
+                            {{ content.created_at|timesince }} ago
+                        </small>
+                        <a href="{% url 'content:detail' content.id %}" class="text-primary hover:text-secondary font-medium text-sm transition-colors duration-200">
+                            Read More →
+                        </a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'content:content_list' %}" class="bg-primary hover:bg-secondary text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                <i class="fas fa-book mr-2"></i>View All Educational Content
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Recent Community Posts -->
+{% if recent_posts %}
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <span class="bg-green-500 text-white px-4 py-2 rounded-full font-semibold mb-4 inline-block">
+                💬 Community
+            </span>
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Community Voices</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                See what our community members are sharing and discussing
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for post in recent_posts %}
+            <article class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div>
+                            <h6 class="font-semibold text-gray-800">{{ post.author.username }}</h6>
+                            <span class="text-sm text-gray-500">{{ post.created_at|timesince }} ago</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">{{ post.content|truncatewords:25 }}</p>
+                    {% if post.image %}
+                    <div class="mb-4">
+                        <img src="{{ post.image.url }}" alt="Post image" class="w-full h-48 object-cover rounded-lg">
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="bg-gray-50 px-6 py-4 border-t">
+                    <div class="flex justify-between items-center">
+                        <div class="flex space-x-4 text-sm text-gray-500">
+                            <span><i class="fas fa-heart mr-1"></i>{{ post.likes_count|default:0 }}</span>
+                            <span><i class="fas fa-comment mr-1"></i>{{ post.comments_count|default:0 }}</span>
+                        </div>
+                        <a href="{{ post.get_absolute_url }}" class="text-primary hover:text-secondary font-medium text-sm transition-colors duration-200">
+                            View Post →
+                        </a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action Section -->
+<section class="py-16 bg-gradient-to-r from-primary to-secondary text-white">
+    <div class="container mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
+                <p class="text-xl mb-8 opacity-90">
+                    Join our community of passionate fishermen and marine conservationists. Together, we can protect our oceans while enjoying sustainable fishing practices.
+                </p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <span class="font-medium">Learn sustainable techniques</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <span class="font-medium">Connect with experts</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <span class="font-medium">Share your catches</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <span class="font-medium">Protect marine life</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="space-y-4">
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'users:register' %}" class="block bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-user-plus mr-2"></i>Join the Community
+                    </a>
+                    <a href="{% url 'users:login' %}" class="block border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-4 rounded-lg font-semibold transition-all duration-300">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Already a Member?
+                    </a>
+                    {% else %}
+                    <a href="{% url 'users:dashboard' %}" class="block bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                    </a>
+                    <a href="{% url 'content:content_list' %}" class="block border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-4 rounded-lg font-semibold transition-all duration-300">
+                        <i class="fas fa-book mr-2"></i>Browse Content
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add intersection observer for animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and sections
+        document.querySelectorAll('article, .stats-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add hover effects to cards
+        document.querySelectorAll('article').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    });
+</script>
+{% endblock %}

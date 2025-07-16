@@ -1,11 +1,11 @@
-{% extends 'educational_content/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Featured Educational Content{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>⭐ Featured Educational Content</h1>
-    <a href="{% url 'educational_content:content_list' %}" class="btn btn-outline-success">
+    <a href="{% url 'content:content_list' %}" class="btn btn-outline-success">
         <i class="bi bi-arrow-left"></i> All Content
     </a>
 </div>
@@ -65,7 +65,7 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <small class="text-muted">{{ content.created_at|date:"M j, Y" }}</small>
-                        <a href="{% url 'educational_content:detail' content.id %}" class="btn btn-warning">
+                        <a href="{% url 'content:detail' content.id %}" class="btn btn-warning">
                             <i class="bi bi-book"></i> Read Content
                         </a>
                     </div>
@@ -111,7 +111,7 @@
 <div class="text-center py-5">
     <h3 class="text-muted">No featured content available</h3>
     <p class="text-muted">Check back later for featured educational content.</p>
-    <a href="{% url 'educational_content:content_list' %}" class="btn btn-success">Browse All Content</a>
+    <a href="{% url 'content:content_list' %}" class="btn btn-success">Browse All Content</a>
 </div>
 {% endif %}
 {% endblock %}

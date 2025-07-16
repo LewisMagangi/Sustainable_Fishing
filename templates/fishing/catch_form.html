@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if catch %}Edit Catch{% else %}Log New Catch{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                        {% if catch %}
+                        📝 Edit Catch: {{ catch.fish_type }}
+                        {% else %}
+                        🐟 Log New Catch
+                        {% endif %}
+                    </h1>
+                    <p class="text-gray-600">
+                        {% if catch %}
+                        Update your catch information below
+                        {% else %}
+                        Record your fishing catch details for sustainable tracking
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="hidden sm:flex items-center space-x-3">
+                    <a href="{% if catch %}{% url 'fishing:catch_detail' catch.id %}{% else %}{% url 'fishing:catch_list' %}{% endif %}" 
+                       class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Back
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 bg-gradient-to-r from-blue-50 to-teal-50 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900">Catch Information</h2>
+            </div>
+            
+            <div class="p-6">
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- Basic Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.fish_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Fish Type <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" 
+                                       name="{{ form.fish_type.name }}" 
+                                       id="{{ form.fish_type.id_for_label }}"
+                                       value="{{ form.fish_type.value|default:'' }}"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm {% if form.fish_type.errors %}border-red-300 focus:ring-red-500 focus:border-red-500{% endif %}"
+                                       placeholder="e.g., Salmon, Tuna, Bass">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            {% if form.fish_type.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.fish_type.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.weight.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Weight (kg) <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="number" 
+                                       name="{{ form.weight.name }}" 
+                                       id="{{ form.weight.id_for_label }}"
+                                       value="{{ form.weight.value|default:'' }}"
+                                       step="0.1"
+                                       min="0"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm {% if form.weight.errors %}border-red-300 focus:ring-red-500 focus:border-red-500{% endif %}"
+                                       placeholder="0.0">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">kg</span>
+                                </div>
+                            </div>
+                            {% if form.weight.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.weight.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Location and Date -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Location <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" 
+                                       name="{{ form.location.name }}" 
+                                       id="{{ form.location.id_for_label }}"
+                                       value="{{ form.location.value|default:'' }}"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm {% if form.location.errors %}border-red-300 focus:ring-red-500 focus:border-red-500{% endif %}"
+                                       placeholder="e.g., Pacific Ocean, Lake Tahoe">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            {% if form.location.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.location.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.catch_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Catch Date <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="date" 
+                                       name="{{ form.catch_date.name }}" 
+                                       id="{{ form.catch_date.id_for_label }}"
+                                       value="{{ form.catch_date.value|default:'' }}"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm {% if form.catch_date.errors %}border-red-300 focus:ring-red-500 focus:border-red-500{% endif %}">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            {% if form.catch_date.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.catch_date.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Status and Price -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Status
+                            </label>
+                            <select name="{{ form.status.name }}" 
+                                    id="{{ form.status.id_for_label }}"
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm {% if form.status.errors %}border-red-300 focus:ring-red-500 focus:border-red-500{% endif %}">
+                                {% for choice in form.status.field.choices %}
+                                <option value="{{ choice.0 }}" {% if form.status.value == choice.0 %}selected{% endif %}>
+                                    {{ choice.1 }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            {% if form.status.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.status.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.price.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Price ($)
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">$</span>
+                                </div>
+                                <input type="number" 
+                                       name="{{ form.price.name }}" 
+                                       id="{{ form.price.id_for_label }}"
+                                       value="{{ form.price.value|default:'' }}"
+                                       step="0.01"
+                                       min="0"
+                                       class="block w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm {% if form.price.errors %}border-red-300 focus:ring-red-500 focus:border-red-500{% endif %}"
+                                       placeholder="0.00">
+                            </div>
+                            {% if form.price.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.price.errors.0 }}</p>
+                            {% else %}
+                            <p class="mt-2 text-sm text-gray-500">Optional - leave blank if not selling</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Notes -->
+                    <div>
+                        <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Additional Notes
+                        </label>
+                        <textarea name="{{ form.notes.name }}" 
+                                  id="{{ form.notes.id_for_label }}"
+                                  rows="4"
+                                  class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm {% if form.notes.errors %}border-red-300 focus:ring-red-500 focus:border-red-500{% endif %}"
+                                  placeholder="Any additional information about the catch, fishing conditions, techniques used, etc.">{{ form.notes.value|default:'' }}</textarea>
+                        {% if form.notes.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.notes.errors.0 }}</p>
+                        {% else %}
+                        <p class="mt-2 text-sm text-gray-500">Optional - any additional information about the catch</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+                        <a href="{% if catch %}{% url 'fishing:catch_detail' catch.id %}{% else %}{% url 'fishing:catch_list' %}{% endif %}" 
+                           class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            Cancel
+                        </a>
+                        <button type="submit" 
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            {% if catch %}Update Catch{% else %}Log Catch{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tips Card -->
+        <div class="mt-8 bg-gradient-to-r from-blue-50 to-teal-50 rounded-xl border border-blue-200 p-6">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-lg font-medium text-blue-900">Sustainable Fishing Tips</h3>
+                    <div class="mt-2 text-sm text-blue-800">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Record accurate weights and locations for better data tracking</li>
+                            <li>Follow local fishing regulations and size limits</li>
+                            <li>Consider catch-and-release for breeding populations</li>
+                            <li>Share your fishing spots responsibly with the community</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Set default catch date to today if creating new catch
+{% if not catch %}
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.querySelector('input[type="date"]');
+    if (dateInput && !dateInput.value) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+    }
+});
+{% endif %}
+
+// Real-time form validation feedback
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                this.classList.add('border-red-300', 'focus:ring-red-500', 'focus:border-red-500');
+                this.classList.remove('border-gray-300', 'focus:ring-blue-500', 'focus:border-blue-500');
+            } else {
+                this.classList.remove('border-red-300', 'focus:ring-red-500', 'focus:border-red-500');
+                this.classList.add('border-gray-300', 'focus:ring-blue-500', 'focus:border-blue-500');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
