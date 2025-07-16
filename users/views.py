@@ -113,7 +113,7 @@ def profile_view(request):
 def edit_profile_view(request):
     """Handle profile editing"""
     if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, instance=request.user)
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Your profile has been updated successfully.')
