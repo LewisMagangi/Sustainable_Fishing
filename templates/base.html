@@ -4,133 +4,290 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Sustainable Fishing{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .navbar-brand {
-            font-weight: bold;
-            color: #0d6efd !important;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0066cc',
+                        secondary: '#004d99',
+                        accent: '#00b4d8',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fadeInUp': 'fadeInUp 1s ease-out',
+                        'fadeInRight': 'fadeInRight 1s ease-out 0.3s both',
+                        'float': 'float 3s ease-in-out infinite',
+                        'spin': 'spin 1s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            'from': { opacity: '0', transform: 'translateY(30px)' },
+                            'to': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        fadeInRight: {
+                            'from': { opacity: '0', transform: 'translateX(30px)' },
+                            'to': { opacity: '1', transform: 'translateX(0)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        }
+                    }
+                }
+            }
         }
-        .footer {
-            background-color: #f8f9fa;
-            margin-top: 50px;
-        }
-        .card {
-            border: none;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        }
-        .btn-primary {
-            background-color: #0d6efd;
-            border-color: #0d6efd;
-        }
-        .profile-img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .stats-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        .activity-item {
-            border-left: 3px solid #0d6efd;
-            padding-left: 15px;
-            margin-bottom: 20px;
-        }
-    </style>
+    </script>
 </head>
-<body>
+<body class="font-inter leading-relaxed text-gray-800 bg-white">
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'content:home' %}">
-                <i class="fas fa-fish"></i> Sustainable Fishing
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'content:home' %}">Home</a>
-                    </li>
+    <nav class="fixed top-0 w-full bg-gradient-to-r from-primary to-secondary shadow-lg z-50 backdrop-blur-md">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="{% url 'content:home' %}" class="flex items-center text-white font-bold text-xl hover:scale-105 transition-transform duration-300">
+                    <i class="fas fa-fish mr-2"></i>Sustainable Fishing
+                </a>
+                
+                <!-- Mobile menu button -->
+                <button class="md:hidden text-white hover:text-gray-200 focus:outline-none" id="mobile-menu-btn">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                
+                <!-- Desktop menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="{% url 'content:home' %}" class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium transition-all duration-300">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:dashboard' %}">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:user_list' %}">Community</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'content:content_list' %}">Educational Content</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'fishing:catch_list' %}">Catches</a>
-                        </li>
-                    {% endif %}
-                </ul>
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle"></i> {{ user.full_name|default:user.username }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'users:profile' %}">Profile</a></li>
-                                <li><a class="dropdown-item" href="{% url 'users:edit_profile' %}">Edit Profile</a></li>
-                                <li><a class="dropdown-item" href="{% url 'users:change_password' %}">Change Password</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'users:logout' %}">Logout</a></li>
-                            </ul>
-                        </li>
+                        <a href="{% url 'users:dashboard' %}" class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                        </a>
+                        <a href="{% url 'users:user_list' %}" class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-users mr-1"></i>Community
+                        </a>
+                        <a href="{% url 'content:content_list' %}" class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-graduation-cap mr-1"></i>Education
+                        </a>
+                        <a href="{% url 'fishing:catch_list' %}" class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-fish mr-1"></i>Catches
+                        </a>
+                        
+                        <!-- User dropdown -->
+                        <div class="relative" id="user-dropdown">
+                            <button class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium transition-all duration-300 flex items-center" id="user-menu-btn">
+                                <i class="fas fa-user-circle mr-1"></i>{{ user.full_name|default:user.username }}
+                                <i class="fas fa-chevron-down ml-1 text-sm"></i>
+                            </button>
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 opacity-0 invisible transform scale-95 transition-all duration-200" id="user-menu">
+                                <a href="{% url 'users:profile' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200">
+                                    <i class="fas fa-user mr-2"></i>Profile
+                                </a>
+                                <a href="{% url 'users:edit_profile' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200">
+                                    <i class="fas fa-edit mr-2"></i>Edit Profile
+                                </a>
+                                <a href="{% url 'users:change_password' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200">
+                                    <i class="fas fa-lock mr-2"></i>Change Password
+                                </a>
+                                <div class="border-t border-gray-200 my-2"></div>
+                                <a href="{% url 'users:logout' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-red-600 transition-colors duration-200">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </a>
+                            </div>
+                        </div>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:register' %}">Register</a>
-                        </li>
+                        <a href="{% url 'users:login' %}" class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-sign-in-alt mr-1"></i>Login
+                        </a>
+                        <a href="{% url 'users:register' %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-user-plus mr-1"></i>Register
+                        </a>
                     {% endif %}
-                </ul>
+                </div>
+            </div>
+            
+            <!-- Mobile menu -->
+            <div class="md:hidden bg-primary/90 backdrop-blur-md border-t border-white/20 opacity-0 invisible transform -translate-y-full transition-all duration-300" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="{% url 'content:home' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'users:dashboard' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
+                            <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                        </a>
+                        <a href="{% url 'users:user_list' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
+                            <i class="fas fa-users mr-1"></i>Community
+                        </a>
+                        <a href="{% url 'content:content_list' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
+                            <i class="fas fa-graduation-cap mr-1"></i>Education
+                        </a>
+                        <a href="{% url 'fishing:catch_list' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
+                            <i class="fas fa-fish mr-1"></i>Catches
+                        </a>
+                        <div class="border-t border-white/20 my-2"></div>
+                        <a href="{% url 'users:profile' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
+                            <i class="fas fa-user mr-1"></i>Profile
+                        </a>
+                        <a href="{% url 'users:logout' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
+                            <i class="fas fa-sign-out-alt mr-1"></i>Logout
+                        </a>
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
+                            <i class="fas fa-sign-in-alt mr-1"></i>Login
+                        </a>
+                        <a href="{% url 'users:register' %}" class="block bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-md font-medium mx-3 mt-2">
+                            <i class="fas fa-user-plus mr-1"></i>Register
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
 
+    <!-- Spacer for fixed navbar -->
+    <div class="h-16"></div>
+
     <!-- Messages -->
     {% if messages %}
-        <div class="container mt-3">
+        <div class="container mx-auto px-4 mt-4">
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div class="{% if message.tags == 'success' %}bg-green-100 border-l-4 border-green-500 text-green-700{% elif message.tags == 'error' %}bg-red-100 border-l-4 border-red-500 text-red-700{% elif message.tags == 'warning' %}bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700{% else %}bg-blue-100 border-l-4 border-blue-500 text-blue-700{% endif %} p-4 mb-4 rounded-r-lg font-medium relative">
+                    <div class="flex items-start">
+                        <i class="fas fa-info-circle mr-2 mt-0.5"></i>
+                        <span class="flex-1">{{ message }}</span>
+                        <button type="button" class="ml-4 text-current hover:text-gray-600" onclick="this.parentElement.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
 
     <!-- Main Content -->
-    <main class="container mt-4">
+    <main class="w-full">
         {% block content %}
         {% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="footer mt-5 py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5><i class="fas fa-fish"></i> Sustainable Fishing</h5>
-                    <p class="text-muted">Promoting sustainable fishing practices and community building.</p>
+    <footer class="bg-gradient-to-r from-gray-800 to-gray-700 text-white mt-16 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-2">
+                    <h5 class="text-accent text-xl font-bold mb-4">
+                        <i class="fas fa-fish mr-2"></i>Sustainable Fishing
+                    </h5>
+                    <p class="text-gray-300 mb-6">
+                        Promoting sustainable fishing practices and building a community of responsible marine stewards.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-white hover:scale-110 transition-all duration-200">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white hover:scale-110 transition-all duration-200">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white hover:scale-110 transition-all duration-200">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white hover:scale-110 transition-all duration-200">
+                            <i class="fab fa-youtube text-xl"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="text-muted">&copy; 2025 Sustainable Fishing Platform. All rights reserved.</p>
+                <div>
+                    <h6 class="text-white font-semibold mb-4">Platform</h6>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">About</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Features</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Pricing</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Support</a></li>
+                    </ul>
                 </div>
+                <div>
+                    <h6 class="text-white font-semibold mb-4">Community</h6>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Guidelines</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Forum</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Events</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="text-white font-semibold mb-4">Resources</h6>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Education</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Regulations</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Techniques</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Conservation</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-8 border-gray-600">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-300 mb-4 md:mb-0">
+                    &copy; 2025 Sustainable Fishing Platform. All rights reserved.
+                </p>
+                <p class="text-gray-300">
+                    Made with <i class="fas fa-heart text-red-500"></i> for our oceans
+                </p>
             </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const userMenuBtn = document.getElementById('user-menu-btn');
+            const userMenu = document.getElementById('user-menu');
+            
+            // Mobile menu toggle
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('opacity-0');
+                    mobileMenu.classList.toggle('invisible');
+                    mobileMenu.classList.toggle('-translate-y-full');
+                });
+            }
+            
+            // User dropdown toggle
+            if (userMenuBtn) {
+                userMenuBtn.addEventListener('click', function() {
+                    userMenu.classList.toggle('opacity-0');
+                    userMenu.classList.toggle('invisible');
+                    userMenu.classList.toggle('scale-95');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
+                        userMenu.classList.add('opacity-0', 'invisible', 'scale-95');
+                    }
+                });
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
     {% block scripts %}
     {% endblock %}
 </body>

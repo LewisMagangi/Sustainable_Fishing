@@ -3,116 +3,257 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="fas fa-chart-bar"></i> Quick Stats</h5>
-            </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <h6>Your Activity</h6>
-                    <p class="mb-1">Catches: <span class="badge bg-primary">{{ total_catches }}</span></p>
-                    <p class="mb-1">Posts: <span class="badge bg-success">{{ total_posts }}</span></p>
-                    <p class="mb-1">Educational: <span class="badge bg-info">{{ total_educational }}</span></p>
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-tachometer-alt text-primary mr-3"></i>Dashboard
+        </h1>
+        <p class="text-gray-600 text-lg">Welcome back, {{ user.full_name|default:user.username }}!</p>
+    </div>
+
+    <div class="grid lg:grid-cols-4 gap-8">
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+                <h5 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-chart-bar text-primary mr-2"></i>Quick Stats
+                </h5>
+                
+                <div class="mb-6">
+                    <h6 class="text-sm font-medium text-gray-600 mb-3">Your Activity</h6>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-700">Catches:</span>
+                            <span class="bg-primary text-white px-2 py-1 rounded-full text-xs font-medium">{{ total_catches }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-700">Posts:</span>
+                            <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">{{ total_posts }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-700">Educational:</span>
+                            <span class="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">{{ total_educational }}</span>
+                        </div>
+                    </div>
                 </div>
                 
                 {% if community_stats %}
-                    <div class="mb-3">
-                        <h6>Community Stats</h6>
-                        <p class="mb-1">Total Users: <span class="badge bg-secondary">{{ community_stats.total_users }}</span></p>
-                        <p class="mb-1">Fishermen: <span class="badge bg-primary">{{ community_stats.total_fishermen }}</span></p>
-                        <p class="mb-1">Educators: <span class="badge bg-info">{{ community_stats.total_educators }}</span></p>
+                    <div class="mb-6">
+                        <h6 class="text-sm font-medium text-gray-600 mb-3">Community Stats</h6>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-700">Total Users:</span>
+                                <span class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-medium">{{ community_stats.total_users }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-700">Fishermen:</span>
+                                <span class="bg-primary text-white px-2 py-1 rounded-full text-xs font-medium">{{ community_stats.total_fishermen }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-700">Educators:</span>
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">{{ community_stats.total_educators }}</span>
+                            </div>
+                        </div>
                     </div>
                 {% endif %}
                 
-                <div class="d-grid">
-                    <a href="{% url 'users:profile' %}" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-user"></i> View Profile
+                <a href="{% url 'users:profile' %}" class="block w-full bg-primary/10 hover:bg-primary hover:text-white text-primary font-medium py-3 px-4 rounded-lg transition-all duration-300 text-center">
+                    <i class="fas fa-user mr-2"></i>View Profile
+                </a>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h5 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-bolt text-yellow-500 mr-2"></i>Quick Actions
+                </h5>
+                <div class="space-y-3">
+                    <a href="{% url 'fishing:catch_create' %}" class="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-fish text-blue-600 mr-3"></i>
+                        <span class="text-sm font-medium text-blue-800">Add New Catch</span>
+                    </a>
+                    <a href="{% url 'content:create' %}" class="flex items-center p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-plus text-green-600 mr-3"></i>
+                        <span class="text-sm font-medium text-green-800">Create Content</span>
+                    </a>
+                    <a href="{% url 'users:user_list' %}" class="flex items-center p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-users text-purple-600 mr-3"></i>
+                        <span class="text-sm font-medium text-purple-800">Browse Community</span>
                     </a>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="col-md-9">
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
-                <p class="text-muted">Welcome back, {{ user.full_name|default:user.username }}!</p>
-            </div>
-        </div>
         
-        <!-- Activity Overview -->
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="card stats-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-fish fa-2x mb-2"></i>
-                        <h3>{{ total_catches }}</h3>
-                        <p class="mb-0">Total Catches</p>
+        <!-- Main Content -->
+        <div class="lg:col-span-3">
+            <!-- Activity Overview Cards -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-3xl font-bold mb-1">{{ total_catches }}</h3>
+                            <p class="text-blue-100">Total Catches</p>
+                        </div>
+                        <div class="bg-white/20 p-3 rounded-full">
+                            <i class="fas fa-fish text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-3xl font-bold mb-1">{{ total_posts }}</h3>
+                            <p class="text-green-100">Timeline Posts</p>
+                        </div>
+                        <div class="bg-white/20 p-3 rounded-full">
+                            <i class="fas fa-comments text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-3xl font-bold mb-1">{{ total_educational }}</h3>
+                            <p class="text-purple-100">Educational Content</p>
+                        </div>
+                        <div class="bg-white/20 p-3 rounded-full">
+                            <i class="fas fa-graduation-cap text-2xl"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card stats-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-comments fa-2x mb-2"></i>
-                        <h3>{{ total_posts }}</h3>
-                        <p class="mb-0">Timeline Posts</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card stats-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-graduation-cap fa-2x mb-2"></i>
-                        <h3>{{ total_educational }}</h3>
-                        <p class="mb-0">Educational Content</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Recent Activity -->
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="fas fa-clock"></i> Recent Activity</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
+            
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h5 class="text-xl font-semibold text-gray-800 mb-6">
+                    <i class="fas fa-clock text-accent mr-2"></i>Recent Activity
+                </h5>
+                
+                <div class="grid md:grid-cols-2 gap-8">
                     <!-- Recent Catches -->
-                    <div class="col-md-6">
-                        <h6>Recent Catches</h6>
+                    <div>
+                        <h6 class="text-lg font-medium text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-fish text-blue-500 mr-2"></i>Recent Catches
+                        </h6>
                         {% if recent_catches %}
-                            {% for catch in recent_catches %}
-                                <div class="activity-item">
-                                    <h6>{{ catch.fish_type }} - {{ catch.weight }}kg</h6>
-                                    <p class="text-muted small">{{ catch.location }} • {{ catch.catch_date }}</p>
-                                </div>
-                            {% endfor %}
+                            <div class="space-y-4">
+                                {% for catch in recent_catches %}
+                                    <div class="border-l-4 border-blue-500 pl-4 py-2">
+                                        <h6 class="font-medium text-gray-800">{{ catch.fish_type }} - {{ catch.weight }}kg</h6>
+                                        <p class="text-sm text-gray-600">{{ catch.location }} • {{ catch.catch_date }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="mt-4">
+                                <a href="{% url 'fishing:catch_list' %}" class="text-blue-600 hover:text-blue-800 font-medium text-sm">
+                                    View all catches →
+                                </a>
+                            </div>
                         {% else %}
-                            <p class="text-muted">No recent catches.</p>
+                            <div class="text-center py-8">
+                                <i class="fas fa-fish text-gray-300 text-4xl mb-4"></i>
+                                <p class="text-gray-500 mb-4">No recent catches.</p>
+                                <a href="{% url 'fishing:catch_create' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                                    Add Your First Catch
+                                </a>
+                            </div>
                         {% endif %}
                     </div>
                     
                     <!-- Recent Posts -->
-                    <div class="col-md-6">
-                        <h6>Recent Posts</h6>
+                    <div>
+                        <h6 class="text-lg font-medium text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-comments text-green-500 mr-2"></i>Recent Posts
+                        </h6>
                         {% if recent_posts %}
-                            {% for post in recent_posts %}
-                                <div class="activity-item">
-                                    <h6>{{ post.title }}</h6>
-                                    <p class="text-muted small">{{ post.created_at|date:"M d, Y" }}</p>
-                                </div>
-                            {% endfor %}
+                            <div class="space-y-4">
+                                {% for post in recent_posts %}
+                                    <div class="border-l-4 border-green-500 pl-4 py-2">
+                                        <h6 class="font-medium text-gray-800">{{ post.title }}</h6>
+                                        <p class="text-sm text-gray-600">{{ post.created_at|date:"M d, Y" }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="mt-4">
+                                <a href="{% url 'content:my_content' %}" class="text-green-600 hover:text-green-800 font-medium text-sm">
+                                    View all posts →
+                                </a>
+                            </div>
                         {% else %}
-                            <p class="text-muted">No recent posts.</p>
+                            <div class="text-center py-8">
+                                <i class="fas fa-comments text-gray-300 text-4xl mb-4"></i>
+                                <p class="text-gray-500 mb-4">No recent posts.</p>
+                                <a href="{% url 'content:create' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                                    Create Your First Post
+                                </a>
+                            </div>
                         {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievement Section -->
+            <div class="mt-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-2xl p-6 shadow-lg">
+                <h5 class="text-xl font-semibold mb-4">
+                    <i class="fas fa-trophy mr-2"></i>Your Achievements
+                </h5>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="bg-white/20 rounded-lg p-4 text-center">
+                        <i class="fas fa-fish text-2xl mb-2"></i>
+                        <h6 class="font-medium">Angler</h6>
+                        <p class="text-sm opacity-90">{{ total_catches }} catches logged</p>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 text-center">
+                        <i class="fas fa-share-alt text-2xl mb-2"></i>
+                        <h6 class="font-medium">Contributor</h6>
+                        <p class="text-sm opacity-90">{{ total_posts }} posts shared</p>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 text-center">
+                        <i class="fas fa-graduation-cap text-2xl mb-2"></i>
+                        <h6 class="font-medium">Educator</h6>
+                        <p class="text-sm opacity-90">{{ total_educational }} content created</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add animation on load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate stats cards
+        const statsCards = document.querySelectorAll('.bg-gradient-to-r');
+        statsCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            }, index * 150);
+        });
+
+        // Add hover effects to activity items
+        const activityItems = document.querySelectorAll('.border-l-4');
+        activityItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(4px)';
+                this.style.transition = 'transform 0.2s ease';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+    });
+</script>
 {% endblock %}
