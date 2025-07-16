@@ -1,4 +1,4 @@
-{% extends 'catches/base.html' %}
+{% extends 'fishing/base.html' %}
 
 {% block title %}{{ catch.fish_type }} - Catch Details{% endblock %}
 
@@ -97,10 +97,10 @@
             <div class="card-body">
                 {% if user == catch.fisher %}
                 <div class="d-grid gap-2">
-                    <a href="{% url 'catches:catch_update' catch.id %}" class="btn btn-primary">
+                    <a href="{% url 'fishing:catch_update' catch.id %}" class="btn btn-primary">
                         Edit Catch
                     </a>
-                    <a href="{% url 'catches:catch_delete' catch.id %}" class="btn btn-outline-danger">
+                    <a href="{% url 'fishing:catch_delete' catch.id %}" class="btn btn-outline-danger">
                         Delete Catch
                     </a>
                 </div>
@@ -108,11 +108,11 @@
                 {% endif %}
                 
                 <div class="d-grid gap-2">
-                    <a href="{% url 'catches:catch_list' %}" class="btn btn-outline-secondary">
+                    <a href="{% url 'fishing:catch_list' %}" class="btn btn-outline-secondary">
                         Back to All Catches
                     </a>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'catches:my_catches' %}" class="btn btn-outline-info">
+                    <a href="{% url 'fishing:my_catches' %}" class="btn btn-outline-info">
                         My Catches
                     </a>
                     {% endif %}

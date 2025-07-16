@@ -10,7 +10,7 @@ from django.views.static import serve as media_serve
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
-    path('catches/', include('catches.urls')),
+    path('catches/', include('fishing.urls')),
     path('education/', include('content.urls')),
 ]
 
