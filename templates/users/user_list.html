@@ -3,141 +3,208 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="fas fa-users"></i> Community Members</h2>
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <a href="{% url 'users:register' %}" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i> Join Community
-                </a>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-users text-primary mr-3"></i>Community Members
+                </h1>
+                <p class="text-gray-600 text-lg">Connect with fellow fishing enthusiasts and marine conservation advocates</p>
             </div>
+            <a href="{% url 'users:register' %}" class="bg-primary hover:bg-secondary text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                <i class="fas fa-user-plus mr-2"></i>Join Community
+            </a>
         </div>
-        
-        <!-- Search and Filter -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <form method="get" class="row g-3">
-                    <div class="col-md-6">
-                        <label for="search" class="form-label">Search Users</label>
-                        <input type="text" class="form-control" id="search" name="search" 
-                               value="{{ search_query }}" placeholder="Search by name, username, or location">
+    </div>
+    
+    <!-- Search and Filter Card -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <form method="get" class="grid md:grid-cols-3 gap-6">
+            <div class="md:col-span-2">
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Users</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
                     </div>
-                    <div class="col-md-4">
-                        <label for="role" class="form-label">Filter by Role</label>
-                        <select class="form-control" id="role" name="role">
-                            <option value="">All Roles</option>
-                            {% for value, label in role_choices %}
-                                <option value="{{ value }}" {% if value == role_filter %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">&nbsp;</label>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i> Search
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                    <input type="text" 
+                           class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                           id="search" 
+                           name="search" 
+                           value="{{ search_query }}" 
+                           placeholder="Search by name, username, or location">
+                </div>
             </div>
-        </div>
-        
-        <!-- Users List -->
-        <div class="row">
-            {% for user in users %}
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                {% if user.profile_picture %}
-                                    <img src="{{ user.profile_picture }}" alt="Profile" 
-                                         class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                                {% else %}
-                                    <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" 
-                                         style="width: 50px; height: 50px; background-color: #f8f9fa; border: 2px solid #dee2e6;">
-                                        <i class="fas fa-user text-muted"></i>
-                                    </div>
-                                {% endif %}
-                                <div>
-                                    <h6 class="card-title mb-1">{{ user.full_name|default:user.username }}</h6>
-                                    <small class="text-muted">{{ user.get_role_display }}</small>
-                                </div>
+            
+            <div>
+                <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Filter by Role</label>
+                <select class="block w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                        id="role" 
+                        name="role">
+                    <option value="">All Roles</option>
+                    {% for value, label in role_choices %}
+                        <option value="{{ value }}" {% if value == role_filter %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="md:col-span-3">
+                <button type="submit" class="bg-primary hover:bg-secondary text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-search mr-2"></i>Search Community
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Users Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for user in users %}
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
+                <div class="p-6">
+                    <!-- Profile Header -->
+                    <div class="flex items-center mb-4">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture }}" alt="Profile" 
+                                 class="w-16 h-16 rounded-full object-cover mr-4 border-2 border-primary/20">
+                        {% else %}
+                            <div class="w-16 h-16 rounded-full mr-4 bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                                <i class="fas fa-user text-white text-lg"></i>
                             </div>
-                            
-                            {% if user.location %}
-                                <p class="text-muted small mb-2">
-                                    <i class="fas fa-map-marker-alt"></i> {{ user.location }}
-                                </p>
-                            {% endif %}
-                            
-                            {% if user.bio %}
-                                <p class="text-muted small">{{ user.bio|truncatewords:15 }}</p>
-                            {% endif %}
-                            
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Joined {{ user.created_at|date:"M Y" }}</small>
-                                <a href="{% url 'users:user_detail' user.id %}" class="btn btn-sm btn-outline-primary">
-                                    View Profile
-                                </a>
-                            </div>
+                        {% endif %}
+                        
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-1">{{ user.full_name|default:user.username }}</h3>
+                            <p class="text-primary text-sm font-medium">{{ user.get_role_display }}</p>
                         </div>
                     </div>
-                </div>
-            {% empty %}
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                            <h5>No users found</h5>
-                            <p class="text-muted">Try adjusting your search criteria or check back later.</p>
+                    
+                    <!-- User Details -->
+                    {% if user.location %}
+                        <div class="flex items-center text-gray-600 mb-3">
+                            <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                            <span class="text-sm">{{ user.location }}</span>
                         </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        
-        <!-- Pagination -->
-        {% if is_paginated %}
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    {% if page_obj.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}">
-                                First
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}">
-                                Previous
-                            </a>
-                        </li>
                     {% endif %}
                     
-                    <li class="page-item active">
-                        <span class="page-link">
-                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                        </span>
-                    </li>
+                    {% if user.bio %}
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ user.bio|truncatewords:15 }}</p>
+                    {% endif %}
+                    
+                    <!-- Member Since -->
+                    <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            <span>Joined {{ user.created_at|date:"M Y" }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- View Profile Button -->
+                    <a href="{% url 'users:user_detail' user.id %}" 
+                       class="block w-full bg-primary hover:bg-secondary text-white text-center font-medium py-3 px-4 rounded-lg transition-all duration-300">
+                        <i class="fas fa-user mr-2"></i>View Profile
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <!-- Empty State -->
+            <div class="col-span-full">
+                <div class="text-center py-16 bg-white rounded-2xl shadow-lg">
+                    <i class="fas fa-users text-gray-300 text-6xl mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">No users found</h3>
+                    <p class="text-gray-600 text-lg mb-8">Try adjusting your search criteria or check back later.</p>
+                    <a href="{% url 'users:register' %}" class="bg-primary hover:bg-secondary text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-user-plus mr-2"></i>Be the First to Join
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <div class="mt-12">
+            <nav class="flex justify-center">
+                <div class="flex items-center space-x-2">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}" 
+                           class="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-lg border border-gray-300 transition-colors duration-200">
+                            <i class="fas fa-angle-double-left mr-1"></i>First
+                        </a>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}" 
+                           class="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-lg border border-gray-300 transition-colors duration-200">
+                            <i class="fas fa-chevron-left mr-1"></i>Previous
+                        </a>
+                    {% endif %}
+                    
+                    <span class="bg-primary text-white font-medium py-2 px-4 rounded-lg">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
                     
                     {% if page_obj.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}">
-                                Next
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}">
-                                Last
-                            </a>
-                        </li>
+                        <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}" 
+                           class="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-lg border border-gray-300 transition-colors duration-200">
+                            Next<i class="fas fa-chevron-right ml-1"></i>
+                        </a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}" 
+                           class="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-lg border border-gray-300 transition-colors duration-200">
+                            Last<i class="fas fa-angle-double-right ml-1"></i>
+                        </a>
                     {% endif %}
-                </ul>
+                </div>
             </nav>
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animation to user cards
+    const userCards = document.querySelectorAll('.bg-white.rounded-2xl');
+    userCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+
+    // Add hover effects to cards
+    userCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Add intersection observer for scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fadeInUp');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all cards
+    userCards.forEach(card => {
+        observer.observe(card);
+    });
+});
+</script>
 {% endblock %}

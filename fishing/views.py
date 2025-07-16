@@ -88,7 +88,7 @@ def catch_delete(request, catch_id):
         return redirect('fishing:catch_list')
     
     context = {'catch': catch}
-    return render(request, 'fishing/catch_confirm_delete.html', context)
+    return render(request, 'fishing/confirm_delete.html', context)
 
 
 @login_required

@@ -3,115 +3,212 @@
 {% block title %}Featured Educational Content{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>⭐ Featured Educational Content</h1>
-    <a href="{% url 'content:content_list' %}" class="btn btn-outline-success">
-        <i class="bi bi-arrow-left"></i> All Content
-    </a>
-</div>
-
-<div class="alert alert-info">
-    <i class="bi bi-info-circle"></i> <strong>Featured Content:</strong> High-quality educational materials selected for their exceptional value to the sustainable fishing community.
-</div>
-
-<!-- Featured Content Grid -->
-{% if page_obj %}
-<div class="row">
-    {% for content in page_obj %}
-    <div class="col-lg-6 mb-4">
-        <div class="card content-card h-100 border-warning">
-            <div class="card-header bg-warning text-dark">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">⭐ Featured</h5>
-                    <small>{{ content.get_category_display }} • {{ content.get_difficulty_level_display }}</small>
-                </div>
+<div class="container mx-auto px-4 py-8">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-star text-yellow-500 mr-3"></i>Featured Educational Content
+                </h1>
+                <p class="text-gray-600 text-lg">High-quality educational materials selected for their exceptional value to the sustainable fishing community.</p>
             </div>
-            
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ content.title }}</h5>
-                
-                <div class="mb-2">
-                    {% if content.category == 'sustainability' %}
-                    <span class="badge bg-success">🌱 {{ content.get_category_display }}</span>
-                    {% elif content.category == 'techniques' %}
-                    <span class="badge bg-primary">🎣 {{ content.get_category_display }}</span>
-                    {% elif content.category == 'regulations' %}
-                    <span class="badge bg-warning">⚖️ {{ content.get_category_display }}</span>
-                    {% else %}
-                    <span class="badge bg-info">🌊 {{ content.get_category_display }}</span>
-                    {% endif %}
-                    
-                    {% if content.difficulty_level == 'beginner' %}
-                    <span class="badge bg-success">{{ content.get_difficulty_level_display }}</span>
-                    {% elif content.difficulty_level == 'intermediate' %}
-                    <span class="badge bg-warning">{{ content.get_difficulty_level_display }}</span>
-                    {% else %}
-                    <span class="badge bg-danger">{{ content.get_difficulty_level_display }}</span>
-                    {% endif %}
-                </div>
-                
-                <div class="content-preview mb-3 flex-grow-1">
-                    <p class="card-text">{{ content.content|truncatewords:25 }}</p>
-                </div>
-                
-                <div class="mt-auto">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <small class="text-muted">
-                            <i class="bi bi-person"></i> By {{ content.author.username }}
-                        </small>
-                        <small class="text-muted">
-                            <i class="bi bi-eye"></i> {{ content.read_count }} read{{ content.read_count|pluralize }}
-                        </small>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">{{ content.created_at|date:"M j, Y" }}</small>
-                        <a href="{% url 'content:detail' content.id %}" class="btn btn-warning">
-                            <i class="bi bi-book"></i> Read Content
-                        </a>
-                    </div>
-                </div>
+            <a href="{% url 'content:content_list' %}" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105">
+                <i class="fas fa-arrow-left mr-2"></i>All Content
+            </a>
+        </div>
+    </div>
+
+    <!-- Info Banner -->
+    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-500 rounded-lg p-6 mb-8">
+        <div class="flex items-start">
+            <div class="bg-yellow-500 text-white p-2 rounded-full mr-4">
+                <i class="fas fa-star text-sm"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-yellow-800 mb-1">Featured Content</h3>
+                <p class="text-yellow-700">These educational materials have been carefully selected by our community moderators for their outstanding quality and relevance to sustainable fishing practices.</p>
             </div>
         </div>
     </div>
-    {% endfor %}
-</div>
 
-<!-- Pagination -->
-{% if page_obj.has_other_pages %}
-<nav aria-label="Featured content pagination">
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-        </li>
-        {% endif %}
-        
-        {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-        <li class="page-item active">
-            <span class="page-link">{{ num }}</span>
-        </li>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-        </li>
-        {% endif %}
+    <!-- Featured Content Grid -->
+    {% if page_obj %}
+    <div class="grid md:grid-cols-2 gap-8">
+        {% for content in page_obj %}
+        <article class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300 hover:shadow-xl relative">
+            <!-- Featured Badge -->
+            <div class="absolute top-0 left-0 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2 rounded-br-lg font-semibold text-sm z-10">
+                <i class="fas fa-star mr-1"></i>Featured
+            </div>
+            
+            <div class="p-6">
+                <!-- Category and Difficulty -->
+                <div class="flex flex-wrap gap-2 mb-4 mt-4">
+                    {% if content.category == 'sustainability' %}
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <i class="fas fa-leaf mr-1"></i>{{ content.get_category_display }}
+                    </span>
+                    {% elif content.category == 'techniques' %}
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <i class="fas fa-fish mr-1"></i>{{ content.get_category_display }}
+                    </span>
+                    {% elif content.category == 'regulations' %}
+                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <i class="fas fa-gavel mr-1"></i>{{ content.get_category_display }}
+                    </span>
+                    {% else %}
+                    <span class="bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <i class="fas fa-water mr-1"></i>{{ content.get_category_display }}
+                    </span>
+                    {% endif %}
+                    
+                    {% if content.difficulty_level == 'beginner' %}
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <i class="fas fa-seedling mr-1"></i>{{ content.get_difficulty_level_display }}
+                    </span>
+                    {% elif content.difficulty_level == 'intermediate' %}
+                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <i class="fas fa-chart-line mr-1"></i>{{ content.get_difficulty_level_display }}
+                    </span>
+                    {% else %}
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <i class="fas fa-trophy mr-1"></i>{{ content.get_difficulty_level_display }}
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <!-- Title -->
+                <h3 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">
+                    {{ content.title }}
+                </h3>
+                
+                <!-- Content Preview -->
+                <p class="text-gray-600 mb-4 line-clamp-3">
+                    {{ content.content|truncatewords:25 }}
+                </p>
+                
+                <!-- Author and Stats -->
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-800">{{ content.author.username }}</p>
+                            <p class="text-xs text-gray-500">{{ content.created_at|date:"M j, Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                        <span>
+                            <i class="fas fa-eye mr-1"></i>{{ content.read_count }}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Read Button -->
+                <a href="{% url 'content:detail' content.id %}" class="block w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 text-center">
+                    <i class="fas fa-book-open mr-2"></i>Read Full Content
+                </a>
+            </div>
+        </article>
         {% endfor %}
-        
-        {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
+    </div>
 
-{% else %}
-<div class="text-center py-5">
-    <h3 class="text-muted">No featured content available</h3>
-    <p class="text-muted">Check back later for featured educational content.</p>
-    <a href="{% url 'content:content_list' %}" class="btn btn-success">Browse All Content</a>
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="mt-12">
+        <nav class="flex justify-center">
+            <div class="flex items-center space-x-2">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-lg border border-gray-300 transition-colors duration-200">
+                    <i class="fas fa-chevron-left mr-1"></i>Previous
+                </a>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <span class="bg-primary text-white font-medium py-2 px-4 rounded-lg">
+                    {{ num }}
+                </span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}" class="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-lg border border-gray-300 transition-colors duration-200">
+                    {{ num }}
+                </a>
+                {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-lg border border-gray-300 transition-colors duration-200">
+                    Next<i class="fas fa-chevron-right ml-1"></i>
+                </a>
+                {% endif %}
+            </div>
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="text-center py-16">
+        <div class="mb-8">
+            <i class="fas fa-star text-gray-300 text-6xl mb-4"></i>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">No Featured Content Available</h3>
+            <p class="text-gray-600 text-lg mb-8">Check back later for featured educational content from our community.</p>
+            <a href="{% url 'content:content_list' %}" class="bg-primary hover:bg-secondary text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                <i class="fas fa-book mr-2"></i>Browse All Content
+            </a>
+        </div>
+    </div>
+    {% endif %}
 </div>
-{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add animation to content cards
+        const cards = document.querySelectorAll('article');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 150);
+        });
+
+        // Add hover effects to cards
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add intersection observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeInUp');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        cards.forEach(card => {
+            observer.observe(card);
+        });
+    });
+</script>
 {% endblock %}
