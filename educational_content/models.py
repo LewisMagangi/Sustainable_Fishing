@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.urls import reverse
 
 
@@ -18,7 +18,7 @@ class EducationalContent(models.Model):
     ]
     
     # Exact fields from database_schema.dbml
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     content = models.TextField()
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)

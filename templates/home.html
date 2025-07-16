@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - Sustainable Fishing Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section bg-primary text-white py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    🐟 Sustainable Fishing Platform
+                </h1>
+                <p class="lead mb-4">
+                    Connect with fellow fishers, log your catches, and access educational content 
+                    to promote sustainable fishing practices in our communities.
+                </p>
+                <div class="d-grid gap-2 d-md-flex">
+                    <a href="{% url 'users:register' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-user-plus"></i> Join Now
+                    </a>
+                    <a href="{% url 'users:login' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-fish" style="font-size: 10rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container">
+    <div class="row text-center mb-5">
+        <div class="col-12">
+            <h2 class="mb-4">Platform Features</h2>
+            <p class="text-muted mb-5">Everything you need for sustainable fishing</p>
+        </div>
+    </div>
+    
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="fas fa-clipboard-list fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Log Your Catches</h5>
+                    <p class="card-text">
+                        Record your fishing activities including fish type, weight, location, 
+                        and sales information to track your fishing business.
+                    </p>
+                    <a href="{% url 'catches:catch_list' %}" class="btn btn-outline-primary">
+                        View Catches
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="fas fa-graduation-cap fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Educational Content</h5>
+                    <p class="card-text">
+                        Access educational materials on sustainability, fishing techniques, 
+                        regulations, and conservation practices.
+                    </p>
+                    <a href="{% url 'educational_content:content_list' %}" class="btn btn-outline-success">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="fas fa-users fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Community</h5>
+                    <p class="card-text">
+                        Connect with other fishers, share experiences, and build a 
+                        sustainable fishing community.
+                    </p>
+                    <a href="{% url 'users:user_list' %}" class="btn btn-outline-info">
+                        Join Community
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body text-center py-5">
+                    <h3 class="mb-4">Join Our Growing Community</h3>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <h4 class="text-primary"><i class="fas fa-users"></i></h4>
+                            <h5>Active Fishers</h5>
+                            <p class="text-muted">Growing community of sustainable fishers</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h4 class="text-success"><i class="fas fa-fish"></i></h4>
+                            <h5>Catches Logged</h5>
+                            <p class="text-muted">Track and improve your fishing business</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h4 class="text-info"><i class="fas fa-leaf"></i></h4>
+                            <h5>Sustainable Practices</h5>
+                            <p class="text-muted">Learn eco-friendly fishing methods</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #198754 100%);
+}
+
+.card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.fa-3x {
+    font-size: 3rem;
+}
+</style>
+{% endblock %}

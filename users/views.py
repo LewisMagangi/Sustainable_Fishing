@@ -19,6 +19,13 @@ from fishing.models import Catch
 from content.models import TimelinePost, EducationalContent
 
 
+def home_view(request):
+    """Home page view"""
+    if request.user.is_authenticated:
+        return redirect('users:dashboard')
+    return render(request, 'home.html')
+
+
 def register_view(request):
     """Handle user registration"""
     if request.user.is_authenticated:

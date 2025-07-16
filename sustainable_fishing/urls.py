@@ -18,6 +18,7 @@ urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', media_serve, {
         'document_root': settings.MEDIA_ROOT,
     }),
+]
   
 urlpatterns += [
     re_path(r'^static/(?P<path>.*)$', serve, {
