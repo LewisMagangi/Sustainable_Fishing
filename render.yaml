@@ -7,7 +7,7 @@ services:
     startCommand: "gunicorn --bind 0.0.0.0:$PORT sustainable_fishing.wsgi:application"
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: sustainable_fishing.settings.production
+        value: sustainable_fishing.settings
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
