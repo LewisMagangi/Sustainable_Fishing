@@ -3,120 +3,235 @@
 {% block title %}My Educational Content{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>📚 My Educational Content</h1>
-    <a href="{% url 'content:create' %}" class="btn btn-success">
-        <i class="bi bi-plus-circle"></i> Create New Content
-    </a>
-</div>
-
-{% if page_obj %}
-<div class="row">
-    {% for content in page_obj %}
-    <div class="col-lg-6 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h5 class="card-title">{{ content.title }}</h5>
-                    <div>
-                        {% if content.is_published %}
-                        <span class="badge bg-success">Published</span>
-                        {% else %}
-                        <span class="badge bg-secondary">Draft</span>
-                        {% endif %}
-                        {% if content.featured %}
-                        <span class="badge bg-warning">⭐ Featured</span>
-                        {% endif %}
-                    </div>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+                        <a href="{% url 'content:home' %}" class="hover:text-gray-700">Home</a>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                        <a href="{% url 'content:content_list' %}" class="hover:text-gray-700">Educational Content</a>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                        <span class="text-gray-900">My Content</span>
+                    </nav>
+                    <h1 class="text-3xl font-bold text-gray-900 flex items-center">
+                        <svg class="w-8 h-8 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        My Educational Content
+                    </h1>
                 </div>
-                
-                <div class="mb-2">
-                    {% if content.category == 'sustainability' %}
-                    <span class="badge bg-success">🌱 {{ content.get_category_display }}</span>
-                    {% elif content.category == 'techniques' %}
-                    <span class="badge bg-primary">🎣 {{ content.get_category_display }}</span>
-                    {% elif content.category == 'regulations' %}
-                    <span class="badge bg-warning">⚖️ {{ content.get_category_display }}</span>
-                    {% else %}
-                    <span class="badge bg-info">🌊 {{ content.get_category_display }}</span>
-                    {% endif %}
-                    
-                    {% if content.difficulty_level == 'beginner' %}
-                    <span class="badge bg-success">{{ content.get_difficulty_level_display }}</span>
-                    {% elif content.difficulty_level == 'intermediate' %}
-                    <span class="badge bg-warning">{{ content.get_difficulty_level_display }}</span>
-                    {% else %}
-                    <span class="badge bg-danger">{{ content.get_difficulty_level_display }}</span>
-                    {% endif %}
-                </div>
-                
-                <p class="card-text">{{ content.content|truncatewords:15 }}</p>
-                
-                <div class="mb-3">
-                    <small class="text-muted">
-                        <i class="bi bi-eye"></i> {{ content.read_count }} read{{ content.read_count|pluralize }}
-                        • Created {{ content.created_at|date:"M j, Y" }}
-                        {% if content.updated_at != content.created_at %}
-                        • Updated {{ content.updated_at|date:"M j, Y" }}
-                        {% endif %}
-                    </small>
-                </div>
-                
-                <div class="d-flex justify-content-between">
-                    <a href="{% url 'content:detail' content.id %}" class="btn btn-outline-success btn-sm">
-                        <i class="bi bi-eye"></i> View
+                <div class="flex items-center space-x-3">
+                    <a href="{% url 'content:content_list' %}" 
+                       class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                        All Content
                     </a>
-                    <div>
-                        <a href="{% url 'content:update' content.id %}" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-pencil"></i> Edit
-                        </a>
-                        <a href="{% url 'content:delete' content.id %}" class="btn btn-outline-danger btn-sm">
-                            <i class="bi bi-trash"></i> Delete
-                        </a>
-                    </div>
+                    <a href="{% url 'content:create' %}" 
+                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create New Content
+                    </a>
                 </div>
             </div>
         </div>
+
+        {% if page_obj %}
+        <!-- Content Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {% for content in page_obj %}
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <!-- Card Header -->
+                <div class="bg-gradient-to-r from-gray-50 to-blue-50 px-6 py-4 border-b border-gray-200">
+                    <div class="flex items-start justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900 line-clamp-2">{{ content.title }}</h3>
+                        <div class="flex flex-col gap-1 ml-4">
+                            {% if content.is_published %}
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                                Published
+                            </span>
+                            {% else %}
+                            <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">
+                                Draft
+                            </span>
+                            {% endif %}
+                            {% if content.featured %}
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                                ⭐ Featured
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="p-6">
+                    <!-- Category and Difficulty Badges -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        {% if content.category == 'sustainability' %}
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                            🌱 {{ content.get_category_display }}
+                        </span>
+                        {% elif content.category == 'techniques' %}
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                            🎣 {{ content.get_category_display }}
+                        </span>
+                        {% elif content.category == 'regulations' %}
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+                            ⚖️ {{ content.get_category_display }}
+                        </span>
+                        {% else %}
+                        <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
+                            🌊 {{ content.get_category_display }}
+                        </span>
+                        {% endif %}
+                        
+                        {% if content.difficulty_level == 'beginner' %}
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                            {{ content.get_difficulty_level_display }}
+                        </span>
+                        {% elif content.difficulty_level == 'intermediate' %}
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+                            {{ content.get_difficulty_level_display }}
+                        </span>
+                        {% else %}
+                        <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">
+                            {{ content.get_difficulty_level_display }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Content Preview -->
+                    <p class="text-gray-700 mb-4 line-clamp-3">{{ content.content|truncatewords:20 }}</p>
+                    
+                    <!-- Meta Information -->
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-4">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            {{ content.read_count }} read{{ content.read_count|pluralize }}
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            {{ content.created_at|date:"M j, Y" }}
+                        </div>
+                        {% if content.updated_at != content.created_at %}
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Updated {{ content.updated_at|date:"M j, Y" }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Card Footer -->
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <a href="{% url 'content:detail' content.id %}" 
+                           class="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            View
+                        </a>
+                        <div class="flex items-center space-x-2">
+                            <a href="{% url 'content:update' content.id %}" 
+                               class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-800 transition-colors">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                Edit
+                            </a>
+                            <a href="{% url 'content:delete' content.id %}" 
+                               class="inline-flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:text-red-800 transition-colors">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="flex justify-center">
+            <nav class="flex items-center space-x-2" aria-label="Pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" 
+                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Previous
+                </a>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <span class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg">
+                    {{ num }}
+                </span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}" 
+                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                    {{ num }}
+                </a>
+                {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" 
+                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                    Next
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-12">
+            <div class="mx-auto max-w-md">
+                <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">No content created yet</h3>
+                <p class="text-gray-600 mb-6">Start sharing your knowledge with the community!</p>
+                <a href="{% url 'content:create' %}" 
+                   class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Create Your First Content
+                </a>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% endfor %}
 </div>
-
-<!-- Pagination -->
-{% if page_obj.has_other_pages %}
-<nav aria-label="My content pagination">
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-        </li>
-        {% endif %}
-        
-        {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-        <li class="page-item active">
-            <span class="page-link">{{ num }}</span>
-        </li>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-        
-        {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
-
-{% else %}
-<div class="text-center py-5">
-    <h3 class="text-muted">No content created yet</h3>
-    <p class="text-muted">Start sharing your knowledge with the community!</p>
-    <a href="{% url 'content:create' %}" class="btn btn-success">Create Your First Content</a>
-</div>
-{% endif %}
 {% endblock %}
