@@ -11,13 +11,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
     path('catches/', include('catches.urls')),
-    path('education/', include('educational_content.urls')),
+    path('education/', include('content.urls')),
 ]
 
 urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', media_serve, {
         'document_root': settings.MEDIA_ROOT,
     }),
+]
   
 urlpatterns += [
     re_path(r'^static/(?P<path>.*)$', serve, {

@@ -1,4 +1,4 @@
-{% extends 'educational_content/base.html' %}
+{% extends 'content/base.html' %}
 
 {% block title %}Delete Content - {{ content.title }}{% endblock %}
 
@@ -37,7 +37,7 @@
                 <form method="post" class="mt-4">
                     {% csrf_token %}
                     <div class="d-flex justify-content-between">
-                        <a href="{% url 'educational_content:detail' content.id %}" class="btn btn-outline-secondary">
+                        <a href="{% url 'content:detail' content.id %}" class="btn btn-outline-secondary">
                             <i class="bi bi-arrow-left"></i> Cancel
                         </a>
                         <button type="submit" class="btn btn-danger">
