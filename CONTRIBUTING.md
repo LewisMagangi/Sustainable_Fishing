@@ -51,12 +51,14 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 ## Setting Up Development Environment
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/LewisMagangi/Sustainable_Fishing.git
 cd sustainable_fishing_project
 ```
 
 2. **Create virtual environment**
+
 ```bash
 python -m venv fishnet_env
 source fishnet_env/bin/activate  # Linux/Mac
@@ -64,17 +66,20 @@ source fishnet_env/bin/activate  # Linux/Mac
 ```
 
 3. **Install dependencies**
+
 ```bash
 pip install -r requirements.txt
 pip install black flake8  # Development tools
 ```
 
 4. **Run migrations**
+
 ```bash
 python manage.py migrate
 ```
 
 5. **Run tests**
+
 ```bash
 python manage.py test
 ```
@@ -99,6 +104,7 @@ flake8 .
 - Reference issues and pull requests liberally after the first line
 
 Example:
+
 ```
 Add user authentication system
 
@@ -113,6 +119,7 @@ Add user authentication system
 When you contribute to this project, please add your information to this list in alphabetical order by last name:
 
 ### Format:
+
 ```
 - **[Your Name](https://github.com/yourusername)** - Brief description of contribution
 ```
@@ -121,6 +128,7 @@ When you contribute to this project, please add your information to this list in
 
 - **[Lewis Magangi](https://github.com/LewisMagangi)** - Project creator and maintainer
 - **[Fidel](https://github.com/phantom-kali)** - Dev
+- Benard Karanja(N-cognto) - Dev
 
 <!-- Add your name here when you contribute! -->
 
