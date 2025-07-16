@@ -45,21 +45,16 @@
     </script>
 </head>
 <body class="font-inter leading-relaxed text-gray-800 bg-white">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full bg-gradient-to-r from-primary to-secondary shadow-lg z-50 backdrop-blur-md">
-        <div class="container mx-auto px-4">
+    <!-- Desktop Top Navigation -->
+    <nav class="hidden lg:block fixed top-0 w-full bg-gradient-to-r from-primary to-secondary shadow-lg z-50 backdrop-blur-md">
+        <div class="container mx-auto px-4 relative">
             <div class="flex items-center justify-between h-16">
                 <a href="{% url 'content:home' %}" class="flex items-center text-white font-bold text-xl hover:scale-105 transition-transform duration-300">
                     <i class="fas fa-fish mr-2"></i>Sustainable Fishing
                 </a>
                 
-                <!-- Mobile menu button -->
-                <button class="md:hidden text-white hover:text-gray-200 focus:outline-none" id="mobile-menu-btn">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-                
                 <!-- Desktop menu -->
-                <div class="hidden md:flex items-center space-x-6">
+                <div class="flex items-center space-x-6">
                     <a href="{% url 'content:home' %}" class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium transition-all duration-300">
                         <i class="fas fa-home mr-1"></i>Home
                     </a>
@@ -78,12 +73,12 @@
                         </a>
                         
                         <!-- User dropdown -->
-                        <div class="relative" id="user-dropdown">
-                            <button class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium transition-all duration-300 flex items-center" id="user-menu-btn">
+                        <div class="relative" id="desktop-user-dropdown">
+                            <button class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium transition-all duration-300 flex items-center" id="desktop-user-menu-btn">
                                 <i class="fas fa-user-circle mr-1"></i>{{ user.full_name|default:user.username }}
                                 <i class="fas fa-chevron-down ml-1 text-sm"></i>
                             </button>
-                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 opacity-0 invisible transform scale-95 transition-all duration-200" id="user-menu">
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 opacity-0 invisible transform scale-95 transition-all duration-200" id="desktop-user-menu">
                                 <a href="{% url 'users:profile' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200">
                                     <i class="fas fa-user mr-2"></i>Profile
                                 </a>
@@ -109,47 +104,98 @@
                     {% endif %}
                 </div>
             </div>
-            
-            <!-- Mobile menu -->
-            <div class="md:hidden bg-primary/90 backdrop-blur-md border-t border-white/20 opacity-0 invisible transform -translate-y-full transition-all duration-300" id="mobile-menu">
-                <div class="px-2 pt-2 pb-3 space-y-1">
-                    <a href="{% url 'content:home' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
-                        <i class="fas fa-home mr-1"></i>Home
+        </div>
+    </nav>
+
+    <!-- Mobile menu button (fixed top bar for mobile) -->
+    <div class="lg:hidden fixed top-0 w-full bg-gradient-to-r from-primary to-secondary shadow-lg z-50 backdrop-blur-md">
+        <div class="flex items-center justify-between h-16 px-4">
+            <a href="{% url 'content:home' %}" class="flex items-center text-white font-bold text-xl hover:scale-105 transition-transform duration-300">
+                <i class="fas fa-fish mr-2"></i>Sustainable Fishing
+            </a>
+            <button class="text-white hover:text-gray-200 focus:outline-none" id="mobile-menu-btn">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile overlay -->
+    <div class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 opacity-0 invisible transition-all duration-300" id="mobile-overlay"></div>
+
+    <!-- Mobile Left Sidebar Navigation -->
+    <nav class="lg:hidden fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-primary to-secondary shadow-lg z-50 backdrop-blur-md transform -translate-x-full transition-transform duration-300" id="mobile-sidebar">
+        <div class="flex flex-col h-full">
+            <!-- Logo section -->
+            <div class="flex items-center justify-between h-16 px-4 border-b border-white/20">
+                <a href="{% url 'content:home' %}" class="flex items-center text-white font-bold text-xl hover:scale-105 transition-transform duration-300">
+                    <i class="fas fa-fish mr-2"></i>Sustainable Fishing
+                </a>
+                <button class="text-white hover:text-gray-200 focus:outline-none" id="sidebar-close-btn">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation links -->
+            <div class="flex-1 overflow-y-auto py-4">
+                <div class="px-4 space-y-2">
+                    <a href="{% url 'content:home' %}" class="flex items-center text-white/90 hover:text-white hover:bg-white/10 px-3 py-3 rounded-md font-medium transition-all duration-300">
+                        <i class="fas fa-home mr-3 w-5"></i>Home
                     </a>
                     {% if user.is_authenticated %}
-                        <a href="{% url 'users:dashboard' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
-                            <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                        <a href="{% url 'users:dashboard' %}" class="flex items-center text-white/90 hover:text-white hover:bg-white/10 px-3 py-3 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-tachometer-alt mr-3 w-5"></i>Dashboard
                         </a>
-                        <a href="{% url 'users:user_list' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
-                            <i class="fas fa-users mr-1"></i>Community
+                        <a href="{% url 'users:user_list' %}" class="flex items-center text-white/90 hover:text-white hover:bg-white/10 px-3 py-3 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-users mr-3 w-5"></i>Community
                         </a>
-                        <a href="{% url 'content:content_list' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
-                            <i class="fas fa-graduation-cap mr-1"></i>Education
+                        <a href="{% url 'content:content_list' %}" class="flex items-center text-white/90 hover:text-white hover:bg-white/10 px-3 py-3 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-graduation-cap mr-3 w-5"></i>Education
                         </a>
-                        <a href="{% url 'fishing:catch_list' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
-                            <i class="fas fa-fish mr-1"></i>Catches
-                        </a>
-                        <div class="border-t border-white/20 my-2"></div>
-                        <a href="{% url 'users:profile' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
-                            <i class="fas fa-user mr-1"></i>Profile
-                        </a>
-                        <a href="{% url 'users:logout' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
-                            <i class="fas fa-sign-out-alt mr-1"></i>Logout
+                        <a href="{% url 'fishing:catch_list' %}" class="flex items-center text-white/90 hover:text-white hover:bg-white/10 px-3 py-3 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-fish mr-3 w-5"></i>Catches
                         </a>
                     {% else %}
-                        <a href="{% url 'users:login' %}" class="block text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md font-medium">
-                            <i class="fas fa-sign-in-alt mr-1"></i>Login
+                        <a href="{% url 'users:login' %}" class="flex items-center text-white/90 hover:text-white hover:bg-white/10 px-3 py-3 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-sign-in-alt mr-3 w-5"></i>Login
                         </a>
-                        <a href="{% url 'users:register' %}" class="block bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-md font-medium mx-3 mt-2">
-                            <i class="fas fa-user-plus mr-1"></i>Register
+                        <a href="{% url 'users:register' %}" class="flex items-center bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-3 rounded-md font-medium transition-all duration-300">
+                            <i class="fas fa-user-plus mr-3 w-5"></i>Register
                         </a>
                     {% endif %}
                 </div>
             </div>
+
+            <!-- User section at bottom -->
+            {% if user.is_authenticated %}
+                <div class="border-t border-white/20 p-4">
+                    <div class="relative" id="mobile-user-dropdown">
+                        <button class="w-full flex items-center text-white/90 hover:text-white hover:bg-white/10 px-3 py-3 rounded-md font-medium transition-all duration-300" id="mobile-user-menu-btn">
+                            <i class="fas fa-user-circle mr-3 w-5"></i>
+                            <span class="flex-1 text-left">{{ user.full_name|default:user.username }}</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </button>
+                        <div class="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 py-2 opacity-0 invisible transform scale-95 transition-all duration-200" id="mobile-user-menu">
+                            <a href="{% url 'users:profile' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200">
+                                <i class="fas fa-user mr-3 w-5"></i>Profile
+                            </a>
+                            <a href="{% url 'users:edit_profile' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200">
+                                <i class="fas fa-edit mr-3 w-5"></i>Edit Profile
+                            </a>
+                            <a href="{% url 'users:change_password' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200">
+                                <i class="fas fa-lock mr-3 w-5"></i>Change Password
+                            </a>
+                            <div class="border-t border-gray-200 my-2"></div>
+                            <a href="{% url 'users:logout' %}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-red-600 transition-colors duration-200">
+                                <i class="fas fa-sign-out-alt mr-3 w-5"></i>Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </nav>
 
-    <!-- Spacer for fixed navbar -->
+    <!-- Spacer for navbar -->
     <div class="h-16"></div>
 
     <!-- Messages -->
@@ -242,37 +288,96 @@
     </footer>
 
     <script>
-        // Mobile menu toggle
+        // Navigation functionality
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const userMenuBtn = document.getElementById('user-menu-btn');
-            const userMenu = document.getElementById('user-menu');
+            const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+            const mobileOverlay = document.getElementById('mobile-overlay');
             
-            // Mobile menu toggle
+            // Desktop user dropdown
+            const desktopUserMenuBtn = document.getElementById('desktop-user-menu-btn');
+            const desktopUserMenu = document.getElementById('desktop-user-menu');
+            
+            // Mobile user dropdown
+            const mobileUserMenuBtn = document.getElementById('mobile-user-menu-btn');
+            const mobileUserMenu = document.getElementById('mobile-user-menu');
+            
+            // Mobile sidebar toggle
+            function openMobileSidebar() {
+                if (mobileSidebar) {
+                    mobileSidebar.classList.remove('-translate-x-full');
+                    mobileOverlay.classList.remove('opacity-0', 'invisible');
+                    document.body.classList.add('overflow-hidden');
+                }
+            }
+            
+            function closeMobileSidebar() {
+                if (mobileSidebar) {
+                    mobileSidebar.classList.add('-translate-x-full');
+                    mobileOverlay.classList.add('opacity-0', 'invisible');
+                    document.body.classList.remove('overflow-hidden');
+                }
+            }
+            
             if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('opacity-0');
-                    mobileMenu.classList.toggle('invisible');
-                    mobileMenu.classList.toggle('-translate-y-full');
+                mobileMenuBtn.addEventListener('click', openMobileSidebar);
+            }
+            
+            if (sidebarCloseBtn) {
+                sidebarCloseBtn.addEventListener('click', closeMobileSidebar);
+            }
+            
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', closeMobileSidebar);
+            }
+            
+            // Close mobile sidebar when clicking on a link
+            if (mobileSidebar) {
+                const sidebarLinks = mobileSidebar.querySelectorAll('a');
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', closeMobileSidebar);
                 });
             }
             
-            // User dropdown toggle
-            if (userMenuBtn) {
-                userMenuBtn.addEventListener('click', function() {
-                    userMenu.classList.toggle('opacity-0');
-                    userMenu.classList.toggle('invisible');
-                    userMenu.classList.toggle('scale-95');
+            // Desktop user dropdown toggle
+            if (desktopUserMenuBtn) {
+                desktopUserMenuBtn.addEventListener('click', function() {
+                    desktopUserMenu.classList.toggle('opacity-0');
+                    desktopUserMenu.classList.toggle('invisible');
+                    desktopUserMenu.classList.toggle('scale-95');
                 });
                 
-                // Close dropdown when clicking outside
+                // Close desktop dropdown when clicking outside
                 document.addEventListener('click', function(e) {
-                    if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
-                        userMenu.classList.add('opacity-0', 'invisible', 'scale-95');
+                    if (!desktopUserMenuBtn.contains(e.target) && !desktopUserMenu.contains(e.target)) {
+                        desktopUserMenu.classList.add('opacity-0', 'invisible', 'scale-95');
                     }
                 });
             }
+            
+            // Mobile user dropdown toggle
+            if (mobileUserMenuBtn) {
+                mobileUserMenuBtn.addEventListener('click', function() {
+                    mobileUserMenu.classList.toggle('opacity-0');
+                    mobileUserMenu.classList.toggle('invisible');
+                    mobileUserMenu.classList.toggle('scale-95');
+                });
+                
+                // Close mobile dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!mobileUserMenuBtn.contains(e.target) && !mobileUserMenu.contains(e.target)) {
+                        mobileUserMenu.classList.add('opacity-0', 'invisible', 'scale-95');
+                    }
+                });
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024) {
+                    closeMobileSidebar();
+                }
+            });
             
             // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {

@@ -3,119 +3,197 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body text-center">
-                {% if user.profile_picture %}
-                    <img src="{{ user.profile_picture }}" alt="Profile Picture" class="profile-img mb-3">
-                {% else %}
-                    <div class="profile-img mb-3 mx-auto d-flex align-items-center justify-content-center" style="background-color: #f8f9fa; border: 2px dashed #dee2e6;">
-                        <i class="fas fa-user fa-3x text-muted"></i>
-                    </div>
-                {% endif %}
-                
-                <h4>{{ user.full_name|default:user.username }}</h4>
-                <p class="text-muted">{{ user.get_role_display }}</p>
-                
-                {% if user.location %}
-                    <p><i class="fas fa-map-marker-alt"></i> {{ user.location }}</p>
-                {% endif %}
-                
-                {% if user.bio %}
-                    <p class="text-muted">{{ user.bio }}</p>
-                {% endif %}
-                
-                <p class="text-muted small">Member since {{ user.created_at|date:"F Y" }}</p>
-                
-                <div class="d-grid gap-2">
-                    <a href="{% url 'users:edit_profile' %}" class="btn btn-primary">
-                        <i class="fas fa-edit"></i> Edit Profile
-                    </a>
-                    <a href="{% url 'users:change_password' %}" class="btn btn-outline-secondary">
-                        <i class="fas fa-lock"></i> Change Password
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-8">
-        <!-- Statistics Cards -->
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="card stats-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-fish fa-2x mb-2"></i>
-                        <h3>{{ total_catches }}</h3>
-                        <p class="mb-0">Total Catches</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card stats-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-comments fa-2x mb-2"></i>
-                        <h3>{{ total_posts }}</h3>
-                        <p class="mb-0">Timeline Posts</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card stats-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-graduation-cap fa-2x mb-2"></i>
-                        <h3>{{ total_educational }}</h3>
-                        <p class="mb-0">Educational Content</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Recent Activity -->
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="fas fa-clock"></i> Recent Activity</h5>
-            </div>
-            <div class="card-body">
-                <!-- Recent Catches -->
-                {% if recent_catches %}
-                    <h6>Recent Catches</h6>
-                    {% for catch in recent_catches %}
-                        <div class="activity-item">
-                            <h6>{{ catch.fish_type }} - {{ catch.weight }}kg</h6>
-                            <p class="text-muted">{{ catch.location }} • {{ catch.catch_date }}</p>
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="container mx-auto px-4">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Profile Card -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-primary to-secondary p-6 text-center">
+                        <div class="relative inline-block">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture }}" 
+                                     alt="Profile Picture" 
+                                     class="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover">
+                            {% else %}
+                                <div class="w-24 h-24 bg-white/20 rounded-full border-4 border-white shadow-lg flex items-center justify-content-center">
+                                    <i class="fas fa-user text-white text-2xl"></i>
+                                </div>
+                            {% endif %}
+                            <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
                         </div>
-                    {% endfor %}
-                {% endif %}
-                
-                <!-- Recent Posts -->
-                {% if recent_posts %}
-                    <h6 class="mt-4">Recent Posts</h6>
-                    {% for post in recent_posts %}
-                        <div class="activity-item">
-                            <h6>{{ post.title }}</h6>
-                            <p class="text-muted">{{ post.content|truncatewords:20 }}</p>
-                            <small class="text-muted">{{ post.created_at|date:"M d, Y" }}</small>
+                        <h2 class="text-white text-xl font-bold mt-4">{{ user.full_name|default:user.username }}</h2>
+                        <p class="text-blue-100 font-medium">{{ user.get_role_display }}</p>
+                        
+                        {% if user.location %}
+                            <p class="text-blue-100 text-sm mt-2">
+                                <i class="fas fa-map-marker-alt mr-1"></i>{{ user.location }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="p-6">
+                        {% if user.bio %}
+                            <div class="mb-6">
+                                <h3 class="text-gray-800 font-semibold mb-2">
+                                    <i class="fas fa-user-circle mr-2"></i>About Me
+                                </h3>
+                                <p class="text-gray-600 text-sm leading-relaxed">{{ user.bio }}</p>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-6">
+                            <p class="text-gray-500 text-sm flex items-center">
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                Member since {{ user.created_at|date:"F Y" }}
+                            </p>
                         </div>
-                    {% endfor %}
-                {% endif %}
-                
-                <!-- Educational Content (for educators) -->
-                {% if educational_content %}
-                    <h6 class="mt-4">Educational Content</h6>
-                    {% for content in educational_content %}
-                        <div class="activity-item">
-                            <h6>{{ content.title }}</h6>
-                            <p class="text-muted">{{ content.category|title }} • {{ content.difficulty_level|title }}</p>
-                            <small class="text-muted">{{ content.created_at|date:"M d, Y" }}</small>
+                        
+                        <div class="space-y-3">
+                            <a href="{% url 'users:edit_profile' %}" 
+                               class="w-full bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white px-4 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+                                <i class="fas fa-edit mr-2"></i>Edit Profile
+                            </a>
+                            <a href="{% url 'users:change_password' %}" 
+                               class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center">
+                                <i class="fas fa-lock mr-2"></i>Change Password
+                            </a>
                         </div>
-                    {% endfor %}
-                {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Statistics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
+                        <div class="text-blue-500 mb-4">
+                            <i class="fas fa-fish text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ total_catches }}</h3>
+                        <p class="text-gray-600 font-medium">Total Catches</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                            <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
+                        <div class="text-green-500 mb-4">
+                            <i class="fas fa-comments text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ total_posts }}</h3>
+                        <p class="text-gray-600 font-medium">Timeline Posts</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
+                        <div class="text-yellow-500 mb-4">
+                            <i class="fas fa-graduation-cap text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ total_educational }}</h3>
+                        <p class="text-gray-600 font-medium">Educational Content</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
                 
-                {% if not recent_catches and not recent_posts and not educational_content %}
-                    <p class="text-muted">No recent activity to display.</p>
-                {% endif %}
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 p-6 border-b">
+                        <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-clock mr-3"></i>Recent Activity
+                        </h3>
+                    </div>
+                    
+                    <div class="p-6">
+                        <!-- Recent Catches -->
+                        {% if recent_catches %}
+                            <div class="mb-8">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                    <i class="fas fa-fish mr-2 text-blue-500"></i>Recent Catches
+                                </h4>
+                                <div class="space-y-4">
+                                    {% for catch in recent_catches %}
+                                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg border-l-4 border-blue-500">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <h5 class="font-semibold text-gray-800">{{ catch.fish_type }}</h5>
+                                                    <p class="text-blue-600 font-medium">{{ catch.weight }}kg</p>
+                                                </div>
+                                                <div class="text-right">
+                                                    <p class="text-gray-600 text-sm">{{ catch.location }}</p>
+                                                    <p class="text-gray-500 text-xs">{{ catch.catch_date }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Recent Posts -->
+                        {% if recent_posts %}
+                            <div class="mb-8">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                    <i class="fas fa-comments mr-2 text-green-500"></i>Recent Posts
+                                </h4>
+                                <div class="space-y-4">
+                                    {% for post in recent_posts %}
+                                        <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg border-l-4 border-green-500">
+                                            <h5 class="font-semibold text-gray-800 mb-2">{{ post.title }}</h5>
+                                            <p class="text-gray-600 text-sm mb-2">{{ post.content|truncatewords:20 }}</p>
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-green-600 text-xs font-medium">{{ post.created_at|date:"M d, Y" }}</span>
+                                                <a href="{{ post.get_absolute_url }}" class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                                    View Post →
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Educational Content -->
+                        {% if educational_content %}
+                            <div class="mb-8">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                    <i class="fas fa-graduation-cap mr-2 text-yellow-500"></i>Educational Content
+                                </h4>
+                                <div class="space-y-4">
+                                    {% for content in educational_content %}
+                                        <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500">
+                                            <h5 class="font-semibold text-gray-800 mb-2">{{ content.title }}</h5>
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-4">
+                                                    <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-xs font-medium">
+                                                        {{ content.category|title }}
+                                                    </span>
+                                                    <span class="bg-yellow-300 text-yellow-900 px-2 py-1 rounded text-xs font-medium">
+                                                        {{ content.difficulty_level|title }}
+                                                    </span>
+                                                </div>
+                                                <span class="text-yellow-600 text-xs font-medium">{{ content.created_at|date:"M d, Y" }}</span>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if not recent_catches and not recent_posts and not educational_content %}
+                            <div class="text-center py-12">
+                                <i class="fas fa-clock text-gray-300 text-4xl mb-4"></i>
+                                <p class="text-gray-500 text-lg">No recent activity to display.</p>
+                                <p class="text-gray-400 text-sm mt-2">Start by sharing your catches or creating educational content!</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

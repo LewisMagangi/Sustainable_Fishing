@@ -1,189 +1,308 @@
 {% extends 'base.html' %}
+{% load fishing_extras %}
 
-{% block title %}{{ content.title }} - Educational Content{% endblock %}
+{% block title %}{{ content.title }}{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-8">
-        <article class="card">
-            <div class="card-header">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h1 class="mb-2">{{ content.title }}</h1>
-                        <div class="mb-2">
-                            {% if content.category == 'sustainability' %}
-                            <span class="badge bg-success">🌱 {{ content.get_category_display }}</span>
-                            {% elif content.category == 'techniques' %}
-                            <span class="badge bg-primary">🎣 {{ content.get_category_display }}</span>
-                            {% elif content.category == 'regulations' %}
-                            <span class="badge bg-warning">⚖️ {{ content.get_category_display }}</span>
-                            {% else %}
-                            <span class="badge bg-info">🌊 {{ content.get_category_display }}</span>
-                            {% endif %}
-                            
-                            {% if content.difficulty_level == 'beginner' %}
-                            <span class="badge bg-success">{{ content.get_difficulty_level_display }}</span>
-                            {% elif content.difficulty_level == 'intermediate' %}
-                            <span class="badge bg-warning">{{ content.get_difficulty_level_display }}</span>
-                            {% else %}
-                            <span class="badge bg-danger">{{ content.get_difficulty_level_display }}</span>
-                            {% endif %}
-                            
-                            {% if content.featured %}
-                            <span class="badge bg-warning">⭐ Featured</span>
-                            {% endif %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+                        <a href="{% url 'content:home' %}" class="hover:text-gray-700">Home</a>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                        <a href="{% url 'content:content_list' %}" class="hover:text-gray-700">Educational Content</a>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                        <span class="text-gray-900">{{ content.title|truncatechars:30 }}</span>
+                    </nav>
+                </div>
+                <div class="hidden sm:flex items-center space-x-3">
+                    <a href="{% url 'content:content_list' %}" 
+                       class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Back to Content
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2">
+                <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <!-- Article Header -->
+                    <div class="px-6 py-8 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-200">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ content.title }}</h1>
+                                
+                                <!-- Badges -->
+                                <div class="flex flex-wrap items-center gap-2 mb-4">
+                                    {% if content.category == 'sustainability' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                        🌱 {{ content.get_category_display }}
+                                    </span>
+                                    {% elif content.category == 'techniques' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                        🎣 {{ content.get_category_display }}
+                                    </span>
+                                    {% elif content.category == 'regulations' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                        ⚖️ {{ content.get_category_display }}
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                                        🌊 {{ content.get_category_display }}
+                                    </span>
+                                    {% endif %}
+                                    
+                                    {% if content.difficulty_level == 'beginner' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                        {{ content.get_difficulty_level_display }}
+                                    </span>
+                                    {% elif content.difficulty_level == 'intermediate' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                        {{ content.get_difficulty_level_display }}
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                                        {{ content.get_difficulty_level_display }}
+                                    </span>
+                                    {% endif %}
+                                    
+                                    {% if content.featured %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                        ⭐ Featured
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Author and Meta Info -->
+                                <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                    <div class="flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        </svg>
+                                        By {{ content.author.username }}
+                                        {% if content.author.first_name or content.author.last_name %}
+                                        ({{ content.author.first_name }} {{ content.author.last_name }})
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        {{ content.created_at|date:"M j, Y g:i A" }}
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                        {{ content.read_count }} read{{ content.read_count|pluralize }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Article Content -->
+                    <div class="px-6 py-8">
+                        <div class="prose prose-lg max-w-none">
+                            {{ content.content|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <!-- Article Footer -->
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                {% if content.updated_at != content.created_at %}
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                    Updated {{ content.updated_at|date:"M j, Y g:i A" }}
+                                </div>
+                                {% endif %}
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    ~{{ content.content|wordcount }} words
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <!-- Social sharing buttons could go here -->
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Actions Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">Actions</h3>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        {% if user == content.author or user.is_superuser %}
+                        <a href="{% url 'content:update' content.id %}" 
+                           class="w-full flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Edit Content
+                        </a>
+                        <a href="{% url 'content:delete' content.id %}" 
+                           class="w-full flex items-center justify-center px-4 py-3 border border-red-300 text-sm font-medium rounded-lg text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Delete Content
+                        </a>
+                        <div class="border-t border-gray-200 pt-3"></div>
+                        {% endif %}
+                        
+                        <a href="{% url 'content:content_list' %}" 
+                           class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                            Back to All Content
+                        </a>
+                        {% if user.is_authenticated and user.is_staff %}
+                        <a href="{% url 'content:my_content' %}" 
+                           class="w-full flex items-center justify-center px-4 py-3 border border-green-300 text-sm font-medium rounded-lg text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                            My Content
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'content:featured' %}" 
+                           class="w-full flex items-center justify-center px-4 py-3 border border-yellow-300 text-sm font-medium rounded-lg text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                            </svg>
+                            Featured Content
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Content Information Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 bg-gradient-to-r from-purple-50 to-pink-50 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Content Information
+                        </h3>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-600">Content ID</span>
+                            <span class="text-sm font-bold text-gray-900">#{{ content.id }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-600">Category</span>
+                            <span class="text-sm font-bold text-gray-900">{{ content.get_category_display }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-600">Difficulty</span>
+                            <span class="text-sm font-bold text-gray-900">{{ content.get_difficulty_level_display }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-600">Status</span>
+                            <div>
+                                {% if content.is_published %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    Published
+                                </span>
+                                {% else %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    Draft
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-600">Featured</span>
+                            <div>
+                                {% if content.featured %}
+                                <span class="text-yellow-600 font-medium">⭐ Yes</span>
+                                {% else %}
+                                <span class="text-gray-500">No</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-600">Reading Time</span>
+                            <span class="text-sm font-bold text-gray-900">~{{ content.content|wordcount|div:200|floatformat:0 }} min</span>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="card-body">
-                <div class="content-text">
-                    {{ content.content|linebreaks }}
-                </div>
-            </div>
-            
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-md-6">
-                        <small class="text-muted">
-                            <i class="bi bi-person"></i> By {{ content.author.username }}
-                            {% if content.author.first_name or content.author.last_name %}
-                            ({{ content.author.first_name }} {{ content.author.last_name }})
-                            {% endif %}
-                        </small>
-                    </div>
-                    <div class="col-md-6 text-md-end">
-                        <small class="text-muted">
-                            <i class="bi bi-calendar"></i> {{ content.created_at|date:"M j, Y g:i A" }}
-                            {% if content.updated_at != content.created_at %}
-                            • Updated {{ content.updated_at|date:"M j, Y g:i A" }}
-                            {% endif %}
-                        </small>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-12">
-                        <small class="text-muted">
-                            <i class="bi bi-eye"></i> {{ content.read_count }} read{{ content.read_count|pluralize }}
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </article>
-    </div>
-    
-    <div class="col-lg-4">
-        <!-- Actions Card -->
-        <div class="card mb-3">
-            <div class="card-header">
-                <h5 class="mb-0">Actions</h5>
-            </div>
-            <div class="card-body">
-                {% if user == content.author or user.is_superuser %}
-                <div class="d-grid gap-2">
-                    <a href="{% url 'content:update' content.id %}" class="btn btn-primary">
-                        <i class="bi bi-pencil"></i> Edit Content
-                    </a>
-                    <a href="{% url 'content:delete' content.id %}" class="btn btn-outline-danger">
-                        <i class="bi bi-trash"></i> Delete Content
-                    </a>
-                </div>
-                <hr>
-                {% endif %}
                 
-                <div class="d-grid gap-2">
-                    <a href="{% url 'content:content_list' %}" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left"></i> Back to All Content
-                    </a>
-                    {% if user.is_authenticated and user.is_staff %}
-                    <a href="{% url 'content:my_content' %}" class="btn btn-outline-info">
-                        <i class="bi bi-collection"></i> My Content
-                    </a>
-                    {% endif %}
-                    <a href="{% url 'content:featured' %}" class="btn btn-outline-warning">
-                        <i class="bi bi-star"></i> Featured Content
-                    </a>
+                <!-- Related Content -->
+                {% if related_content %}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 bg-gradient-to-r from-blue-50 to-teal-50 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Related {{ content.get_category_display }} Content
+                        </h3>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        {% for related in related_content %}
+                        <div class="pb-4 {% if not forloop.last %}border-b border-gray-200{% endif %}">
+                            <h4 class="mb-2">
+                                <a href="{% url 'content:detail' related.id %}" 
+                                   class="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors duration-200">
+                                    {{ related.title|truncatechars:50 }}
+                                </a>
+                            </h4>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2 text-xs text-gray-500">
+                                    <span>By {{ related.author.username }}</span>
+                                    <span>•</span>
+                                    <span>{{ related.created_at|date:"M j" }}</span>
+                                </div>
+                                <div>
+                                    {% if related.difficulty_level == 'beginner' %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        {{ related.get_difficulty_level_display }}
+                                    </span>
+                                    {% elif related.difficulty_level == 'intermediate' %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        {{ related.get_difficulty_level_display }}
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        {{ related.get_difficulty_level_display }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
+                {% endif %}
             </div>
         </div>
-        
-        <!-- Content Info Card -->
-        <div class="card mb-3">
-            <div class="card-header">
-                <h6 class="mb-0">Content Information</h6>
-            </div>
-            <div class="card-body">
-                <table class="table table-sm table-borderless">
-                    <tr>
-                        <th>Content ID:</th>
-                        <td>#{{ content.id }}</td>
-                    </tr>
-                    <tr>
-                        <th>Category:</th>
-                        <td>{{ content.get_category_display }}</td>
-                    </tr>
-                    <tr>
-                        <th>Difficulty:</th>
-                        <td>{{ content.get_difficulty_level_display }}</td>
-                    </tr>
-                    <tr>
-                        <th>Status:</th>
-                        <td>
-                            {% if content.is_published %}
-                            <span class="badge bg-success">Published</span>
-                            {% else %}
-                            <span class="badge bg-secondary">Draft</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Featured:</th>
-                        <td>
-                            {% if content.featured %}
-                            <span class="text-warning">⭐ Yes</span>
-                            {% else %}
-                            No
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Word Count:</th>
-                        <td>~{{ content.content|wordcount }} words</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        
-        <!-- Related Content -->
-        {% if related_content %}
-        <div class="card">
-            <div class="card-header">
-                <h6 class="mb-0">Related {{ content.get_category_display }} Content</h6>
-            </div>
-            <div class="card-body">
-                {% for related in related_content %}
-                <div class="mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
-                    <h6 class="mb-1">
-                        <a href="{% url 'content:detail' related.id %}" class="text-decoration-none">
-                            {{ related.title|truncatechars:50 }}
-                        </a>
-                    </h6>
-                    <small class="text-muted">
-                        By {{ related.author.username }} • {{ related.created_at|date:"M j" }}
-                        {% if related.difficulty_level == 'beginner' %}
-                        <span class="badge bg-success">{{ related.get_difficulty_level_display }}</span>
-                        {% elif related.difficulty_level == 'intermediate' %}
-                        <span class="badge bg-warning">{{ related.get_difficulty_level_display }}</span>
-                        {% else %}
-                        <span class="badge bg-danger">{{ related.get_difficulty_level_display }}</span>
-                        {% endif %}
-                    </small>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}
