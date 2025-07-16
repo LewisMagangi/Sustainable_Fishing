@@ -24,8 +24,6 @@ INSTALLED_APPS = [
     "fishing",
     "content",
     'catches',
-    'educational_content',
-
 ]
 
 MIDDLEWARE = [

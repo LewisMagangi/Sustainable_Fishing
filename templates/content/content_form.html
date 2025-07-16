@@ -1,4 +1,4 @@
-{% extends 'educational_content/base.html' %}
+{% extends 'content/base.html' %}
 
 {% block title %}
 {% if content %}Edit Content{% else %}Create New Content{% endif %} - Educational Content
@@ -120,7 +120,7 @@
                     </div>
                     
                     <div class="d-flex justify-content-between">
-                        <a href="{% if content %}{% url 'educational_content:detail' content.id %}{% else %}{% url 'educational_content:content_list' %}{% endif %}" 
+                        <a href="{% if content %}{% url 'content:detail' content.id %}{% else %}{% url 'content:content_list' %}{% endif %}" 
                            class="btn btn-outline-secondary">
                             <i class="bi bi-arrow-left"></i> Cancel
                         </a>
