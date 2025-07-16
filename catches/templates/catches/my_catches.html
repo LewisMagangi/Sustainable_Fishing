@@ -1,0 +1,148 @@
+{% extends 'catches/base.html' %}
+
+{% block title %}My Catches - Sustainable Fishing Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>🎣 My Catches</h1>
+    <a href="{% url 'catches:catch_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Log New Catch
+    </a>
+</div>
+
+{% if page_obj %}
+<!-- Summary Stats -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-primary">{{ page_obj.paginator.count }}</h5>
+                <p class="card-text">Total Catches</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-success">
+                    {% for catch in page_obj %}{% if catch.status == 'sold' %}{{ forloop.counter0|add:1 }}{% endif %}{% endfor %}
+                </h5>
+                <p class="card-text">Sold</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-warning">
+                    {% for catch in page_obj %}{% if catch.status == 'unsold' %}{{ forloop.counter0|add:1 }}{% endif %}{% endfor %}
+                </h5>
+                <p class="card-text">Unsold</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-info">
+                    {% for catch in page_obj %}{% if catch.status == 'donated' %}{{ forloop.counter0|add:1 }}{% endif %}{% endfor %}
+                </h5>
+                <p class="card-text">Donated</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Catches List -->
+<div class="row">
+    {% for catch in page_obj %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card catch-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title mb-0">{{ catch.fish_type }}</h5>
+                    {% if catch.status == 'sold' %}
+                    <span class="badge bg-success">{{ catch.get_status_display }}</span>
+                    {% elif catch.status == 'unsold' %}
+                    <span class="badge bg-warning">{{ catch.get_status_display }}</span>
+                    {% else %}
+                    <span class="badge bg-info">{{ catch.get_status_display }}</span>
+                    {% endif %}
+                </div>
+                
+                <p class="card-text">
+                    <strong>Weight:</strong> {{ catch.weight }} kg<br>
+                    <strong>Location:</strong> {{ catch.location }}<br>
+                    <strong>Date:</strong> {{ catch.catch_date }}<br>
+                    {% if catch.price %}
+                    <strong>Price:</strong> <span class="text-success">${{ catch.price }}</span>
+                    {% endif %}
+                </p>
+                
+                {% if catch.notes %}
+                <p class="card-text">
+                    <small class="text-muted">{{ catch.notes|truncatewords:10 }}</small>
+                </p>
+                {% endif %}
+                
+                <div class="d-flex gap-2 mt-3">
+                    <a href="{% url 'catches:catch_detail' catch.id %}" class="btn btn-outline-primary btn-sm flex-fill">
+                        View
+                    </a>
+                    <a href="{% url 'catches:catch_update' catch.id %}" class="btn btn-outline-secondary btn-sm flex-fill">
+                        Edit
+                    </a>
+                    <a href="{% url 'catches:catch_delete' catch.id %}" class="btn btn-outline-danger btn-sm flex-fill">
+                        Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<nav aria-label="My catches pagination">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }}</span>
+        </li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="text-center py-5">
+    <div class="mb-4">
+        <i class="bi bi-fish" style="font-size: 4rem; color: #6c757d;"></i>
+    </div>
+    <h3 class="text-muted">No catches logged yet</h3>
+    <p class="text-muted">Start logging your catches to track your fishing activities!</p>
+    <a href="{% url 'catches:catch_create' %}" class="btn btn-primary btn-lg">
+        🐟 Log Your First Catch
+    </a>
+</div>
+{% endif %}
+{% endblock %}
