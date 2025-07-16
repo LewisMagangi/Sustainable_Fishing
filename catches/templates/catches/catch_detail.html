@@ -1,0 +1,146 @@
+{% extends 'catches/base.html' %}
+
+{% block title %}{{ catch.fish_type }} - Catch Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="mb-0">{{ catch.fish_type }} Catch</h1>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Catch Information</h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <th>Fish Type:</th>
+                                <td>{{ catch.fish_type }}</td>
+                            </tr>
+                            <tr>
+                                <th>Weight:</th>
+                                <td>{{ catch.weight }} kg</td>
+                            </tr>
+                            <tr>
+                                <th>Location:</th>
+                                <td>{{ catch.location }}</td>
+                            </tr>
+                            <tr>
+                                <th>Catch Date:</th>
+                                <td>{{ catch.catch_date }}</td>
+                            </tr>
+                            <tr>
+                                <th>Status:</th>
+                                <td>
+                                    {% if catch.status == 'sold' %}
+                                    <span class="badge bg-success">{{ catch.get_status_display }}</span>
+                                    {% elif catch.status == 'unsold' %}
+                                    <span class="badge bg-warning">{{ catch.get_status_display }}</span>
+                                    {% else %}
+                                    <span class="badge bg-info">{{ catch.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if catch.price %}
+                            <tr>
+                                <th>Price:</th>
+                                <td class="text-success fw-bold">${{ catch.price }}</td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Fisher Information</h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <th>Fisher:</th>
+                                <td>{{ catch.fisher.username }}</td>
+                            </tr>
+                            {% if catch.fisher.first_name or catch.fisher.last_name %}
+                            <tr>
+                                <th>Name:</th>
+                                <td>{{ catch.fisher.first_name }} {{ catch.fisher.last_name }}</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <th>Logged:</th>
+                                <td>{{ catch.created_at|date:"M j, Y g:i A" }}</td>
+                            </tr>
+                            {% if catch.updated_at != catch.created_at %}
+                            <tr>
+                                <th>Last Updated:</th>
+                                <td>{{ catch.updated_at|date:"M j, Y g:i A" }}</td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+                
+                {% if catch.notes %}
+                <div class="mt-4">
+                    <h5>Additional Notes</h5>
+                    <div class="alert alert-light">
+                        {{ catch.notes|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Actions</h5>
+            </div>
+            <div class="card-body">
+                {% if user == catch.fisher %}
+                <div class="d-grid gap-2">
+                    <a href="{% url 'catches:catch_update' catch.id %}" class="btn btn-primary">
+                        Edit Catch
+                    </a>
+                    <a href="{% url 'catches:catch_delete' catch.id %}" class="btn btn-outline-danger">
+                        Delete Catch
+                    </a>
+                </div>
+                <hr>
+                {% endif %}
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'catches:catch_list' %}" class="btn btn-outline-secondary">
+                        Back to All Catches
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'catches:my_catches' %}" class="btn btn-outline-info">
+                        My Catches
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Stats Card -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0">Quick Stats</h6>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">
+                    <div class="mb-2">
+                        <strong>Catch ID:</strong> #{{ catch.id }}
+                    </div>
+                    <div class="mb-2">
+                        <strong>Value per kg:</strong> 
+                        {% if catch.price and catch.weight %}
+                        ${{ catch.price|floatformat:2 }}/{{ catch.weight }}kg = ${{ catch.price|div:catch.weight|floatformat:2 }}/kg
+                        {% else %}
+                        Not specified
+                        {% endif %}
+                    </div>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
