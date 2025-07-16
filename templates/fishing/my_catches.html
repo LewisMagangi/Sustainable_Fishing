@@ -1,11 +1,11 @@
-{% extends 'catches/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}My Catches - Sustainable Fishing Platform{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>🎣 My Catches</h1>
-    <a href="{% url 'catches:catch_create' %}" class="btn btn-primary">
+    <a href="{% url 'fishing:catch_create' %}" class="btn btn-primary">
         <i class="bi bi-plus-circle"></i> Log New Catch
     </a>
 </div>
@@ -86,13 +86,13 @@
                 {% endif %}
                 
                 <div class="d-flex gap-2 mt-3">
-                    <a href="{% url 'catches:catch_detail' catch.id %}" class="btn btn-outline-primary btn-sm flex-fill">
+                    <a href="{% url 'fishing:catch_detail' catch.id %}" class="btn btn-outline-primary btn-sm flex-fill">
                         View
                     </a>
-                    <a href="{% url 'catches:catch_update' catch.id %}" class="btn btn-outline-secondary btn-sm flex-fill">
+                    <a href="{% url 'fishing:catch_update' catch.id %}" class="btn btn-outline-secondary btn-sm flex-fill">
                         Edit
                     </a>
-                    <a href="{% url 'catches:catch_delete' catch.id %}" class="btn btn-outline-danger btn-sm flex-fill">
+                    <a href="{% url 'fishing:catch_delete' catch.id %}" class="btn btn-outline-danger btn-sm flex-fill">
                         Delete
                     </a>
                 </div>
@@ -140,7 +140,7 @@
     </div>
     <h3 class="text-muted">No catches logged yet</h3>
     <p class="text-muted">Start logging your catches to track your fishing activities!</p>
-    <a href="{% url 'catches:catch_create' %}" class="btn btn-primary btn-lg">
+    <a href="{% url 'fishing:catch_create' %}" class="btn btn-primary btn-lg">
         🐟 Log Your First Catch
     </a>
 </div>

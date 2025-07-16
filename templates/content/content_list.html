@@ -1,4 +1,4 @@
-{% extends 'educational_content/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Educational Content - Sustainable Fishing Platform{% endblock %}
 
@@ -6,7 +6,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>📚 Educational Content</h1>
     {% if user.is_authenticated and user.is_staff %}
-    <a href="{% url 'educational_content:create' %}" class="btn btn-success">
+    <a href="{% url 'content:create' %}" class="btn btn-success">
         <i class="bi bi-plus-circle"></i> Create Content
     </a>
     {% endif %}
@@ -42,7 +42,7 @@
             </div>
             <div class="col-md-2 d-flex align-items-end">
                 <button type="submit" class="btn btn-outline-success me-2">Filter</button>
-                <a href="{% url 'educational_content:content_list' %}" class="btn btn-outline-secondary">Clear</a>
+                <a href="{% url 'content:content_list' %}" class="btn btn-outline-secondary">Clear</a>
             </div>
         </form>
     </div>
@@ -96,7 +96,7 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <small class="text-muted">{{ content.created_at|date:"M j, Y" }}</small>
-                        <a href="{% url 'educational_content:detail' content.id %}" class="btn btn-outline-success btn-sm">Read More</a>
+                        <a href="{% url 'content:detail' content.id %}" class="btn btn-outline-success btn-sm">Read More</a>
                     </div>
                 </div>
             </div>
@@ -151,7 +151,7 @@
         {% endif %}
     </p>
     {% if user.is_authenticated and user.is_staff %}
-    <a href="{% url 'educational_content:create' %}" class="btn btn-success">Create First Content</a>
+    <a href="{% url 'content:create' %}" class="btn btn-success">Create First Content</a>
     {% endif %}
 </div>
 {% endif %}
