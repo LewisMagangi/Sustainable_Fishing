@@ -3,87 +3,260 @@
 {% block title %}Register - Sustainable Fishing{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0"><i class="fas fa-user-plus"></i> Create Account</h4>
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl w-full mx-auto space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-user-plus text-white text-2xl"></i>
             </div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-                        {{ form.username }}
-                        {% if form.username.errors %}
-                            <div class="text-danger">{{ form.username.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
-                        {{ form.email }}
-                        {% if form.email.errors %}
-                            <div class="text-danger">{{ form.email.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.full_name.id_for_label }}" class="form-label">Full Name</label>
-                        {{ form.full_name }}
-                        {% if form.full_name.errors %}
-                            <div class="text-danger">{{ form.full_name.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.role.id_for_label }}" class="form-label">Role</label>
-                        {{ form.role }}
-                        {% if form.role.errors %}
-                            <div class="text-danger">{{ form.role.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.location.id_for_label }}" class="form-label">Location (Optional)</label>
-                        {{ form.location }}
-                        {% if form.location.errors %}
-                            <div class="text-danger">{{ form.location.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.bio.id_for_label }}" class="form-label">Bio (Optional)</label>
-                        {{ form.bio }}
-                        {% if form.bio.errors %}
-                            <div class="text-danger">{{ form.bio.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.password1.id_for_label }}" class="form-label">Password</label>
-                        {{ form.password1 }}
-                        {% if form.password1.errors %}
-                            <div class="text-danger">{{ form.password1.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.password2.id_for_label }}" class="form-label">Confirm Password</label>
-                        {{ form.password2 }}
-                        {% if form.password2.errors %}
-                            <div class="text-danger">{{ form.password2.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-user-plus"></i> Create Account
-                    </button>
-                </form>
+            <h2 class="mt-6 text-3xl font-bold text-gray-900">
+                Join Our Community
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                Create your account and start your sustainable fishing journey
+            </p>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
                 
-                <div class="text-center mt-3">
-                    <p>Already have an account? <a href="{% url 'users:login' %}">Login here</a></p>
+                <!-- Basic Info Section -->
+                <div class="space-y-6">
+                    <div class="border-b border-gray-200 pb-4">
+                        <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                            <i class="fas fa-user text-primary mr-2"></i>
+                            Basic Information
+                        </h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-at text-primary mr-2"></i>Username
+                            </label>
+                            <input type="text" 
+                                   name="{{ form.username.name }}" 
+                                   id="{{ form.username.id_for_label }}"
+                                   value="{{ form.username.value|default:'' }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                                   placeholder="Choose a username"
+                                   required>
+                            {% if form.username.errors %}
+                                <div class="mt-1 text-sm text-red-600">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ form.username.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-envelope text-primary mr-2"></i>Email Address
+                            </label>
+                            <input type="email" 
+                                   name="{{ form.email.name }}" 
+                                   id="{{ form.email.id_for_label }}"
+                                   value="{{ form.email.value|default:'' }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                                   placeholder="your@email.com"
+                                   required>
+                            {% if form.email.errors %}
+                                <div class="mt-1 text-sm text-red-600">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ form.email.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.full_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-id-card text-primary mr-2"></i>Full Name
+                        </label>
+                        <input type="text" 
+                               name="{{ form.full_name.name }}" 
+                               id="{{ form.full_name.id_for_label }}"
+                               value="{{ form.full_name.value|default:'' }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                               placeholder="Enter your full name"
+                               required>
+                        {% if form.full_name.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                {{ form.full_name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Profile Info Section -->
+                <div class="space-y-6">
+                    <div class="border-b border-gray-200 pb-4">
+                        <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                            <i class="fas fa-user-cog text-green-500 mr-2"></i>
+                            Profile Information
+                        </h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.role.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-briefcase text-primary mr-2"></i>Role
+                            </label>
+                            <select name="{{ form.role.name }}" 
+                                    id="{{ form.role.id_for_label }}"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-white"
+                                    required>
+                                {% for choice in form.role.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if form.role.value == choice.0 %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if form.role.errors %}
+                                <div class="mt-1 text-sm text-red-600">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ form.role.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-map-marker-alt text-primary mr-2"></i>Location <span class="text-gray-400">(Optional)</span>
+                            </label>
+                            <input type="text" 
+                                   name="{{ form.location.name }}" 
+                                   id="{{ form.location.id_for_label }}"
+                                   value="{{ form.location.value|default:'' }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                                   placeholder="Your fishing location">
+                            {% if form.location.errors %}
+                                <div class="mt-1 text-sm text-red-600">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ form.location.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.bio.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-pen text-primary mr-2"></i>Bio <span class="text-gray-400">(Optional)</span>
+                        </label>
+                        <textarea name="{{ form.bio.name }}" 
+                                  id="{{ form.bio.id_for_label }}"
+                                  rows="3"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 placeholder-gray-400 resize-none"
+                                  placeholder="Tell us about yourself and your fishing experience...">{{ form.bio.value|default:'' }}</textarea>
+                        {% if form.bio.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                {{ form.bio.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Password Section -->
+                <div class="space-y-6">
+                    <div class="border-b border-gray-200 pb-4">
+                        <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                            <i class="fas fa-lock text-blue-500 mr-2"></i>
+                            Security
+                        </h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-key text-primary mr-2"></i>Password
+                            </label>
+                            <input type="password" 
+                                   name="{{ form.password1.name }}" 
+                                   id="{{ form.password1.id_for_label }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                                   placeholder="Choose a strong password"
+                                   required>
+                            {% if form.password1.errors %}
+                                <div class="mt-1 text-sm text-red-600">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ form.password1.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-check-circle text-primary mr-2"></i>Confirm Password
+                            </label>
+                            <input type="password" 
+                                   name="{{ form.password2.name }}" 
+                                   id="{{ form.password2.id_for_label }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                                   placeholder="Confirm your password"
+                                   required>
+                            {% if form.password2.errors %}
+                                <div class="mt-1 text-sm text-red-600">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ form.password2.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="text-sm text-red-700">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            {{ form.non_field_errors.0 }}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-medium py-3 px-4 rounded-lg hover:from-green-600 hover:to-blue-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    Create Account
+                </button>
+            </form>
+            
+            <div class="mt-8 text-center">
+                <p class="text-sm text-gray-600">
+                    Already have an account? 
+                    <a href="{% url 'users:login' %}" class="font-medium text-primary hover:text-secondary transition-colors duration-200">
+                        Sign in here
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="bg-white/50 backdrop-blur-sm rounded-xl p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="flex flex-col items-center">
+                    <div class="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fas fa-fish text-blue-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-medium text-gray-900">Track Your Catches</h4>
+                    <p class="text-sm text-gray-600 mt-1">Log and share your fishing experiences</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fas fa-users text-green-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-medium text-gray-900">Join Community</h4>
+                    <p class="text-sm text-gray-600 mt-1">Connect with fellow anglers worldwide</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fas fa-leaf text-purple-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-medium text-gray-900">Learn Sustainability</h4>
+                    <p class="text-sm text-gray-600 mt-1">Discover eco-friendly fishing practices</p>
                 </div>
             </div>
         </div>
