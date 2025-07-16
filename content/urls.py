@@ -11,4 +11,5 @@ urlpatterns = [
     path('<int:content_id>/delete/', views.content_delete, name='delete'),
     path('my-content/', views.my_content, name='my_content'),
     path('featured/', views.featured_content, name='featured'),
+    path('home/', views.home_view, name='home'),
 ]

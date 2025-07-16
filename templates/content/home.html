@@ -1,0 +1,348 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section bg-primary text-white py-5 mb-5" style="background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-fish"></i> Sustainable Fishing Platform
+                </h1>
+                <p class="lead mb-4">
+                    Join our community of responsible fishermen and marine conservation advocates. 
+                    Share knowledge, track catches, and promote sustainable fishing practices.
+                </p>
+                <div class="d-flex gap-3">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'users:dashboard' %}" class="btn btn-light btn-lg">
+                            <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{% url 'users:register' %}" class="btn btn-light btn-lg">
+                            <i class="fas fa-user-plus"></i> Join Community
+                        </a>
+                        <a href="{% url 'users:login' %}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <i class="fas fa-water fa-10x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Platform Statistics -->
+<div class="container mb-5">
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+                    <h3 class="fw-bold text-primary">{{ stats.total_content }}</h3>
+                    <p class="text-muted">Educational Resources</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="fas fa-comments fa-3x text-success mb-3"></i>
+                    <h3 class="fw-bold text-success">{{ stats.total_posts }}</h3>
+                    <p class="text-muted">Community Posts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                    <h3 class="fw-bold text-warning">{{ stats.featured_content_count }}</h3>
+                    <p class="text-muted">Featured Content</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Educational Content -->
+{% if featured_content %}
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">
+                    <i class="fas fa-star text-warning"></i> Featured Educational Content
+                </h2>
+                <a href="{% url 'content:featured' %}" class="btn btn-outline-warning">
+                    View All Featured
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for content in featured_content %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-warning">⭐ Featured</span>
+                        {% if content.category == 'sustainability' %}
+                        <span class="badge bg-success">🌱 {{ content.get_category_display }}</span>
+                        {% elif content.category == 'techniques' %}
+                        <span class="badge bg-primary">🎣 {{ content.get_category_display }}</span>
+                        {% elif content.category == 'regulations' %}
+                        <span class="badge bg-warning">⚖️ {{ content.get_category_display }}</span>
+                        {% else %}
+                        <span class="badge bg-info">🌊 {{ content.get_category_display }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <h5 class="card-title">{{ content.title }}</h5>
+                    <p class="card-text text-muted">
+                        {{ content.content|truncatewords:15 }}
+                    </p>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-user"></i> {{ content.author.username }}
+                        </small>
+                        <small class="text-muted">
+                            <i class="fas fa-eye"></i> {{ content.read_count }} reads
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{% url 'content:detail' content.id %}" class="btn btn-primary w-100">
+                        <i class="fas fa-book-open"></i> Read More
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Recent Timeline Posts -->
+{% if recent_posts %}
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">
+                    <i class="fas fa-clock text-info"></i> Recent Community Posts
+                </h2>
+                {% if user.is_authenticated %}
+                <a href="{% url 'users:dashboard' %}" class="btn btn-outline-info">
+                    View Timeline
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for post in recent_posts %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar bg-primary text-white rounded-circle me-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{ post.author.full_name|default:post.author.username }}</h6>
+                                <small class="text-muted">{{ post.created_at|date:"M d, Y" }}</small>
+                            </div>
+                        </div>
+                        {% if post.post_type == 'general' %}
+                        <span class="badge bg-secondary">{{ post.get_post_type_display }}</span>
+                        {% elif post.post_type == 'catch_share' %}
+                        <span class="badge bg-success">{{ post.get_post_type_display }}</span>
+                        {% elif post.post_type == 'education' %}
+                        <span class="badge bg-info">{{ post.get_post_type_display }}</span>
+                        {% else %}
+                        <span class="badge bg-warning">{{ post.get_post_type_display }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text text-muted">
+                        {{ post.content|truncatewords:20 }}
+                    </p>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-heart text-danger"></i> {{ post.likes_count }} likes
+                        </small>
+                        <small class="text-muted">
+                            {{ post.created_at|timesince }} ago
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Latest Educational Content -->
+{% if latest_content %}
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">
+                    <i class="fas fa-book text-success"></i> Latest Educational Content
+                </h2>
+                <a href="{% url 'content:content_list' %}" class="btn btn-outline-success">
+                    View All Content
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for content in latest_content %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        {% if content.category == 'sustainability' %}
+                        <span class="badge bg-success">🌱 {{ content.get_category_display }}</span>
+                        {% elif content.category == 'techniques' %}
+                        <span class="badge bg-primary">🎣 {{ content.get_category_display }}</span>
+                        {% elif content.category == 'regulations' %}
+                        <span class="badge bg-warning">⚖️ {{ content.get_category_display }}</span>
+                        {% else %}
+                        <span class="badge bg-info">🌊 {{ content.get_category_display }}</span>
+                        {% endif %}
+                        
+                        {% if content.difficulty_level == 'beginner' %}
+                        <span class="badge bg-success">{{ content.get_difficulty_level_display }}</span>
+                        {% elif content.difficulty_level == 'intermediate' %}
+                        <span class="badge bg-warning">{{ content.get_difficulty_level_display }}</span>
+                        {% else %}
+                        <span class="badge bg-danger">{{ content.get_difficulty_level_display }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <h5 class="card-title">{{ content.title }}</h5>
+                    <p class="card-text text-muted">
+                        {{ content.content|truncatewords:15 }}
+                    </p>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-user"></i> {{ content.author.username }}
+                        </small>
+                        <small class="text-muted">
+                            <i class="fas fa-eye"></i> {{ content.read_count }} reads
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{% url 'content:detail' content.id %}" class="btn btn-success w-100">
+                        <i class="fas fa-book-open"></i> Read More
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Call to Action -->
+<div class="bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-4">Join Our Sustainable Fishing Community</h2>
+                <p class="lead mb-4">
+                    Whether you're a seasoned fisherman, marine conservation advocate, or just starting your journey, 
+                    our platform provides the tools and community you need to promote sustainable fishing practices.
+                </p>
+                {% if not user.is_authenticated %}
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{% url 'users:register' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus"></i> Join Now
+                    </a>
+                    <a href="{% url 'users:login' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </div>
+                {% else %}
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{% url 'users:dashboard' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="{% url 'users:user_list' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-users"></i> Community
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container py-5">
+    <div class="row text-center">
+        <div class="col-12 mb-5">
+            <h2>Platform Features</h2>
+            <p class="lead text-muted">Everything you need to promote sustainable fishing</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="text-center">
+                <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-fish fa-2x"></i>
+                </div>
+                <h4>Track Your Catches</h4>
+                <p class="text-muted">
+                    Log your fishing activities, track locations, and monitor your impact on marine ecosystems.
+                </p>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="text-center">
+                <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-graduation-cap fa-2x"></i>
+                </div>
+                <h4>Learn & Share</h4>
+                <p class="text-muted">
+                    Access educational content about sustainable practices and share your knowledge with the community.
+                </p>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="text-center">
+                <div class="feature-icon bg-info text-white rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+                <h4>Community</h4>
+                <p class="text-muted">
+                    Connect with like-minded individuals, share experiences, and build a sustainable fishing community.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -2,14 +2,48 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q
-from .models import EducationalContent
+from django.db.models import Q, Count
+from .models import EducationalContent, TimelinePost
 from .forms import EducationalContentForm, ContentFilterForm
 
 
 def is_educator_or_admin(user):
     """Check if user is educator or admin (as per database schema design notes)"""
     return user.is_authenticated and (user.is_staff or user.is_superuser)
+
+
+def home_view(request):
+    """Home page view showing platform overview and featured content"""
+    # Get featured educational content
+    featured_content = EducationalContent.objects.filter(
+        is_published=True, 
+        featured=True
+    ).order_by('-created_at')[:3]
+    
+    # Get recent posts from timeline
+    recent_posts = TimelinePost.objects.select_related('author').order_by('-created_at')[:6]
+    
+    # Get platform statistics
+    stats = {
+        'total_content': EducationalContent.objects.filter(is_published=True).count(),
+        'total_posts': TimelinePost.objects.count(),
+        'featured_content_count': featured_content.count(),
+    }
+    
+    # Get latest educational content
+    latest_content = EducationalContent.objects.filter(
+        is_published=True
+    ).order_by('-created_at')[:6]
+    
+    context = {
+        'featured_content': featured_content,
+        'recent_posts': recent_posts,
+        'latest_content': latest_content,
+        'stats': stats,
+        'title': 'Home - Sustainable Fishing Platform'
+    }
+    
+    return render(request, 'content/home.html', context)
 
 
 def content_list(request):
