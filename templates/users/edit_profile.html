@@ -56,21 +56,8 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Mobile File Upload Button (visible on small screens) -->
-                                <div class="block md:hidden w-full max-w-sm">
-                                    <button type="button" 
-                                            id="mobile-upload-btn" 
-                                            class="w-full bg-primary hover:bg-secondary text-white px-6 py-3 rounded-lg font-medium transition-colors duration-300 flex items-center justify-center space-x-2">
-                                        <i class="fas fa-camera"></i>
-                                        <span>Choose Profile Picture</span>
-                                    </button>
-                                    <p class="text-gray-400 text-xs text-center mt-2">
-                                        Supports: JPG, PNG, GIF • Max size: 5MB
-                                    </p>
-                                </div>
-                                
-                                <!-- Drag and Drop Area (hidden on mobile) -->
-                                <div id="drop-area" class="hidden md:block w-full max-w-md border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-colors duration-300 hover:border-primary hover:bg-primary/5">
+                                <!-- Drag and Drop Area -->
+                                <div id="drop-area" class="w-full max-w-md border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-colors duration-300 hover:border-primary hover:bg-primary/5">
                                     <div class="space-y-3">
                                         <i class="fas fa-cloud-upload-alt text-4xl text-gray-400"></i>
                                         <div>
@@ -100,7 +87,7 @@
                                     <div class="bg-gray-200 rounded-full h-2">
                                         <div class="bg-primary h-2 rounded-full transition-all duration-300" style="width: 0%" id="progress-bar"></div>
                                     </div>
-                                    <p class="text-sm text-gray-600 mt-2 text-center">Processing...</p>
+                                    <p class="text-sm text-gray-600 mt-2 text-center">Uploading...</p>
                                 </div>
                                 
                                 <!-- File info -->
@@ -345,12 +332,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fileInput.click();
     });
     
-    // Handle mobile upload button click
-    const mobileUploadBtn = document.getElementById('mobile-upload-btn');
-    mobileUploadBtn.addEventListener('click', () => {
-        fileInput.click();
-    });
-    
     // Handle profile preview click
     profileOverlay.addEventListener('click', () => {
         fileInput.click();
@@ -380,12 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show upload progress
         showUploadProgress();
         
-        // Create a new FileList with the dropped file and assign it to the input
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
-        
-        // Create file reader for preview
+        // Create file reader
         const reader = new FileReader();
         
         reader.onload = function(e) {
